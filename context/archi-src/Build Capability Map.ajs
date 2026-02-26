@@ -1,0 +1,730 @@
+/**
+ * @name Build Capability Map
+ * @description Finds all capabilities in the model and creates a hierarchical map view.
+ * Uses an adaptive flow layout that packs children in rows, trying multiple target widths
+ * and picking the best layout to minimize whitespace. All leaf capabilities have uniform
+ * size based on the longest label. Subtrees are prioritized and leaves back-fill unused
+ * row space before creating additional leaf-only rows.
+ * Shows a configuration dialog for layout, sizing, colors, and depth limiting.
+ * @version 2.2.0
+ * @author Thomas Rohde
+ * @lastModifiedDate 2026-02-23
+ */
+
+console.clear();
+console.show();
+
+load(__DIR__ + "lib/log.js");
+load(__DIR__ + "lib/requireModel.js");
+load(__DIR__ + "lib/swtImports.js");
+load(__DIR__ + "lib/capabilityMapDialog.js");
+
+(function () {
+    "use strict";
+
+    // Layout constants — set from dialog options after configuration
+    var HEADER_HEIGHT, ROOT_GAP, VIEW_MARGIN, TARGET_ASPECT_RATIO;
+
+    // =====================================================================
+    // Java types for text measurement
+    // =====================================================================
+    var JFont = Java.type("java.awt.Font");
+    var BufferedImage = Java.type("java.awt.image.BufferedImage");
+
+    /**
+     * Measure text pixel width using Java AWT FontMetrics.
+     * @param {string} text
+     * @returns {number} width in pixels
+     */
+    function measureTextWidth(text) {
+        if (!text || !text.trim()) return 40;
+        var img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        var g2d = img.createGraphics();
+        g2d.setFont(new JFont("Segoe UI", JFont.PLAIN, 12));
+        var width = g2d.getFontMetrics().stringWidth(text);
+        g2d.dispose();
+        return width;
+    }
+
+    /**
+     * Get the display name for an element, handling null/blank names.
+     * @param {Object} el - jArchi element
+     * @returns {string}
+     */
+    function getName(el) {
+        var name = el.name;
+        return name && name.trim() ? name.trim() : "-- unnamed --";
+    }
+
+    // =====================================================================
+    // Adaptive Flow Layout
+    // =====================================================================
+
+    /**
+     * Pack children into horizontal rows given a target container width.
+     * Items flow left-to-right, wrapping when the next item would exceed
+     * the available content width.
+     *
+     * @param {Array} children - nodes with .size.w and .size.h
+     * @param {number} targetWidth - total container width including padding
+     * @param {Object} options - layout options with gap and padding
+     * @returns {{ w: number, h: number, rows: Array }}
+     */
+    function packRows(children, targetWidth, options) {
+        var contentWidth = targetWidth - 2 * options.padding;
+        var rows = [];
+        var currentRow = [];
+        var currentRowWidth = 0;
+
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            var needed = currentRow.length > 0 ? options.gap + child.size.w : child.size.w;
+
+            if (currentRow.length > 0 && currentRowWidth + needed > contentWidth) {
+                rows.push(currentRow);
+                currentRow = [child];
+                currentRowWidth = child.size.w;
+            } else {
+                currentRow.push(child);
+                currentRowWidth += needed;
+            }
+        }
+        if (currentRow.length > 0) rows.push(currentRow);
+
+        // Compute per-row metrics and overall dimensions
+        var maxRowWidth = 0;
+        var totalHeight = HEADER_HEIGHT;
+        var rowMeta = [];
+
+        for (var r = 0; r < rows.length; r++) {
+            var row = rows[r];
+            var rowWidth = 0;
+            var rowHeight = 0;
+            for (var j = 0; j < row.length; j++) {
+                if (j > 0) rowWidth += options.gap;
+                rowWidth += row[j].size.w;
+                if (row[j].size.h > rowHeight) rowHeight = row[j].size.h;
+            }
+            if (rowWidth > maxRowWidth) maxRowWidth = rowWidth;
+            if (r > 0) totalHeight += options.gap;
+            totalHeight += rowHeight;
+            rowMeta.push({ items: row, height: rowHeight, width: rowWidth });
+        }
+
+        return {
+            w: maxRowWidth + 2 * options.padding,
+            h: totalHeight + options.padding,
+            rows: rowMeta
+        };
+    }
+
+    /**
+     * Score a layout — lower is better.
+     * Balances aspect ratio, wasted space, row uniformity, height uniformity,
+     * and last-row fill.
+     */
+    function scoreLayout(layout, options) {
+        if (layout.rows.length === 0) return Infinity;
+
+        // Aspect ratio: prefer close to target
+        var aspect = layout.w / layout.h;
+        var ratioPenalty = Math.abs(aspect - TARGET_ASPECT_RATIO);
+
+        // Wasted space fraction
+        var totalChildArea = 0;
+        for (var r = 0; r < layout.rows.length; r++) {
+            for (var i = 0; i < layout.rows[r].items.length; i++) {
+                var s = layout.rows[r].items[i].size;
+                totalChildArea += s.w * s.h;
+            }
+        }
+        var containerArea = layout.w * layout.h;
+        var wastedFraction = 1 - totalChildArea / containerArea;
+
+        // Row width balance — penalize rows much narrower than the widest
+        var maxW = layout.w - 2 * options.padding;
+        var varianceSum = 0;
+        for (var r2 = 0; r2 < layout.rows.length; r2++) {
+            var fill = maxW > 0 ? layout.rows[r2].width / maxW : 1;
+            varianceSum += (1 - fill) * (1 - fill);
+        }
+        var rowVariance = Math.sqrt(varianceSum / layout.rows.length);
+
+        // Height variance within rows — penalize uneven peer rows.
+        // Rows that intentionally mix subtrees and leaves are exempt.
+        var heightVarianceSum = 0;
+        var heightVarianceRows = 0;
+        for (var r3 = 0; r3 < layout.rows.length; r3++) {
+            var rowItems = layout.rows[r3].items;
+            if (rowItems.length > 1) {
+                var hasLeaf = false;
+                var hasSubtree = false;
+                var maxH = 0, minH = Infinity;
+                for (var j = 0; j < rowItems.length; j++) {
+                    if (rowItems[j].size.h > maxH) maxH = rowItems[j].size.h;
+                    if (rowItems[j].size.h < minH) minH = rowItems[j].size.h;
+                    if (rowItems[j]._effectiveLeaf) hasLeaf = true;
+                    else hasSubtree = true;
+                }
+                if (hasLeaf && hasSubtree) continue;
+                if (maxH > 0) {
+                    heightVarianceSum += (maxH - minH) / maxH;
+                    heightVarianceRows++;
+                }
+            }
+        }
+        var heightVariance = heightVarianceRows > 0 ? heightVarianceSum / heightVarianceRows : 0;
+
+        // Last row fill penalty
+        var lastRowPenalty = 0;
+        if (layout.rows.length > 1) {
+            var lastW = layout.rows[layout.rows.length - 1].width;
+            var firstW = layout.rows[0].width;
+            if (firstW > 0) {
+                lastRowPenalty = Math.max(0, 1 - lastW / firstW) * 0.5;
+            }
+        }
+
+        return ratioPenalty * 3.0
+             + wastedFraction * 2.0
+             + rowVariance * 1.5
+             + heightVariance * 2.5
+             + lastRowPenalty * 1.0;
+    }
+
+    /**
+     * Find the best flow layout for a set of children by trying every
+     * possible first-row item count and picking the lowest-scoring layout.
+     *
+     * @param {Array} children - nodes with computed .size
+     * @param {Object} options - layout options
+     * @returns {{ w: number, h: number, rows: Array }}
+     */
+    function computeFlowLayout(children, options) {
+        if (children.length === 0) {
+            return { w: 2 * options.padding, h: HEADER_HEIGHT + options.padding, rows: [] };
+        }
+        if (children.length === 1) {
+            return {
+                w: children[0].size.w + 2 * options.padding,
+                h: children[0].size.h + HEADER_HEIGHT + options.padding,
+                rows: [{ items: [children[0]], height: children[0].size.h, width: children[0].size.w }]
+            };
+        }
+
+        var bestLayout = null;
+        var bestScore = Infinity;
+
+        // Try target widths determined by fitting k items in the first row
+        for (var k = 1; k <= children.length; k++) {
+            var targetW = 2 * options.padding;
+            for (var i = 0; i < k; i++) {
+                targetW += children[i].size.w;
+                if (i > 0) targetW += options.gap;
+            }
+
+            var layout = packRows(children, targetW, options);
+            var score = scoreLayout(layout, options);
+            if (score < bestScore) {
+                bestScore = score;
+                bestLayout = layout;
+            }
+        }
+
+        return bestLayout;
+    }
+
+    /**
+     * Convert row metadata into a final layout envelope.
+     */
+    function buildLayoutFromRows(rows, options) {
+        var maxRowWidth = 0;
+        var h = HEADER_HEIGHT;
+        for (var r = 0; r < rows.length; r++) {
+            if (rows[r].width > maxRowWidth) maxRowWidth = rows[r].width;
+            if (r > 0) h += options.gap;
+            h += rows[r].height;
+        }
+        h += options.padding;
+        return { w: maxRowWidth + 2 * options.padding, h: h, rows: rows };
+    }
+
+    /**
+     * Merge two sets of packed rows into a single layout result.
+     */
+    function mergeRowResults(topRows, bottomRows, options) {
+        return buildLayoutFromRows(topRows.rows.concat(bottomRows.rows), options);
+    }
+
+    /**
+     * Ensure a row has explicit placements with per-item offsets.
+     * Default placements are a simple left-to-right run at y=0.
+     */
+    function ensureRowPlacements(row, options) {
+        if (row.placements && row.placements.length > 0) return;
+
+        row.placements = [];
+        var x = 0;
+        for (var i = 0; i < row.items.length; i++) {
+            var item = row.items[i];
+            row.placements.push({ item: item, x: x, y: 0 });
+            x += item.size.w + options.gap;
+        }
+    }
+
+    /**
+     * Fill spare width in subtree rows with leaves before creating
+     * additional leaf-only rows. In mixed rows, leaves are stacked in
+     * columns to exploit vertical space beside tall subtree containers.
+     * Lower rows are filled first because they tend to have the largest
+     * usable area.
+     *
+     * @param {Array} rows - subtree row metadata from packRows
+     * @param {Array} leaves - leaf nodes to place
+     * @param {number} contentWidth - available row width excluding padding
+     * @param {Object} options - layout options
+     * @returns {Array} leaves that did not fit in subtree rows
+     */
+    function backfillRowsWithLeaves(rows, leaves, contentWidth, options) {
+        if (leaves.length === 0) return [];
+
+        var leafIdx = 0;
+        var leafW = leaves[0].size.w;
+        var leafH = leaves[0].size.h;
+
+        for (var r = rows.length - 1; r >= 0 && leafIdx < leaves.length; r--) {
+            var row = rows[r];
+            var startX = row.width + (row.items.length > 0 ? options.gap : 0);
+            var availableWidth = contentWidth - startX;
+            if (availableWidth < leafW) continue;
+
+            // Number of leaf columns that fit in remaining width
+            var maxCols = Math.floor((availableWidth + options.gap) / (leafW + options.gap));
+            if (maxCols <= 0) continue;
+
+            // Number of stacked leaves that fit vertically in this row
+            var maxRowsPerCol = Math.floor((row.height + options.gap) / (leafH + options.gap));
+            if (maxRowsPerCol <= 0) continue;
+
+            var capacity = maxCols * maxRowsPerCol;
+            var placeCount = Math.min(capacity, leaves.length - leafIdx);
+            if (placeCount <= 0) continue;
+
+            ensureRowPlacements(row, options);
+
+            for (var p = 0; p < placeCount; p++) {
+                var col = Math.floor(p / maxRowsPerCol);
+                var stackRow = p % maxRowsPerCol;
+                var leaf = leaves[leafIdx++];
+
+                var px = startX + col * (leafW + options.gap);
+                var py = stackRow * (leafH + options.gap);
+
+                row.placements.push({ item: leaf, x: px, y: py });
+                row.items.push(leaf);
+
+                var right = px + leaf.size.w;
+                var bottom = py + leaf.size.h;
+                if (right > row.width) row.width = right;
+                if (bottom > row.height) row.height = bottom;
+            }
+        }
+
+        return leafIdx < leaves.length ? leaves.slice(leafIdx) : [];
+    }
+
+    /**
+     * Pack subtrees and leaves in two phases:
+     * 1) pack subtrees, then back-fill free row space with leaves,
+     * 2) place remaining leaves in additional rows.
+     * Tries candidate widths from both groups and picks the best layout.
+     *
+     * @param {Array} subtrees - non-leaf child nodes
+     * @param {Array} leaves - leaf child nodes
+     * @param {Object} options - layout options
+     * @returns {{ w: number, h: number, rows: Array }}
+     */
+    function computeBandedFlowLayout(subtrees, leaves, options) {
+        var bestLayout = null;
+        var bestScore = Infinity;
+
+        // Collect candidate target widths from both groups
+        var candidateWidths = [];
+        var k, i, tw;
+
+        for (k = 1; k <= subtrees.length; k++) {
+            tw = 2 * options.padding;
+            for (i = 0; i < k; i++) {
+                tw += subtrees[i].size.w;
+                if (i > 0) tw += options.gap;
+            }
+            candidateWidths.push(tw);
+        }
+
+        for (k = 1; k <= leaves.length; k++) {
+            tw = 2 * options.padding;
+            for (i = 0; i < k; i++) {
+                tw += leaves[i].size.w;
+                if (i > 0) tw += options.gap;
+            }
+            candidateWidths.push(tw);
+        }
+
+        for (var c = 0; c < candidateWidths.length; c++) {
+            var targetW = candidateWidths[c];
+            var stResult = packRows(subtrees, targetW, options);
+            var remainingLeaves = backfillRowsWithLeaves(
+                stResult.rows,
+                leaves,
+                targetW - 2 * options.padding,
+                options
+            );
+
+            var layout;
+            if (remainingLeaves.length > 0) {
+                var lfResult = packRows(remainingLeaves, targetW, options);
+                layout = mergeRowResults(stResult, lfResult, options);
+            } else {
+                layout = buildLayoutFromRows(stResult.rows, options);
+            }
+
+            var score = scoreLayout(layout, options);
+            if (score < bestScore) {
+                bestScore = score;
+                bestLayout = layout;
+            }
+        }
+
+        return bestLayout;
+    }
+
+    // =====================================================================
+    // Main
+    // =====================================================================
+
+    try {
+        log.header("Build Capability Map");
+        requireModel();
+
+        // 1. Collect all capabilities
+        var capabilities = $("capability");
+        if (capabilities.size() === 0) {
+            window.alert("No capabilities found in the current model.");
+            return;
+        }
+        log.info("Found " + capabilities.size() + " capabilities.");
+
+        // 2. Build element lookup
+        var elementMap = {};
+        capabilities.each(function (c) {
+            elementMap[c.id] = c;
+        });
+
+        // 3. Build parent-child tree from composition and aggregation relationships
+        var childrenMap = {};
+        var parentMap = {};
+
+        function addRelationship(rel) {
+            if (rel.source.type !== "capability" || rel.target.type !== "capability") return;
+            var pid = rel.source.id;
+            var cid = rel.target.id;
+            if (parentMap[cid]) return;
+            if (!childrenMap[pid]) childrenMap[pid] = [];
+            if (childrenMap[pid].indexOf(cid) === -1) {
+                childrenMap[pid].push(cid);
+                parentMap[cid] = pid;
+            }
+        }
+
+        $("composition-relationship").each(addRelationship);
+        $("aggregation-relationship").each(addRelationship);
+
+        // Sort children alphabetically for initial ordering
+        Object.keys(childrenMap).forEach(function (pid) {
+            childrenMap[pid].sort(function (a, b) {
+                return getName(elementMap[a]).localeCompare(getName(elementMap[b]));
+            });
+        });
+
+        // 4. Find root capabilities (not composed/aggregated by another capability)
+        var roots = [];
+        capabilities.each(function (c) {
+            if (!parentMap[c.id]) roots.push(c);
+        });
+        roots.sort(function (a, b) {
+            return getName(a).localeCompare(getName(b));
+        });
+
+        if (roots.length === 0) {
+            window.alert("No root capabilities found. All capabilities have a parent — check for circular composition relationships.");
+            return;
+        }
+        log.info("Found " + roots.length + " root capabilities.");
+
+        // 5. Build tree structure with cycle prevention
+        var visited = {};
+
+        function buildTree(element) {
+            if (visited[element.id]) return null;
+            visited[element.id] = true;
+
+            var children = (childrenMap[element.id] || [])
+                .filter(function (cid) { return elementMap[cid] && !visited[cid]; })
+                .map(function (cid) { return buildTree(elementMap[cid]); })
+                .filter(function (n) { return n !== null; });
+
+            return {
+                element: element,
+                children: children,
+                isLeaf: children.length === 0,
+                size: null,
+                rows: []
+            };
+        }
+
+        var trees = roots.map(function (r) { return buildTree(r); })
+            .filter(function (t) { return t !== null; });
+
+        // 6. Compute maxDepth from the tree
+        function computeMaxDepth(node, depth) {
+            if (node.children.length === 0) return depth;
+            var max = depth;
+            for (var i = 0; i < node.children.length; i++) {
+                var childDepth = computeMaxDepth(node.children[i], depth + 1);
+                if (childDepth > max) max = childDepth;
+            }
+            return max;
+        }
+
+        var treeMaxDepth = 0;
+        for (var t = 0; t < trees.length; t++) {
+            var d = computeMaxDepth(trees[t], 0);
+            if (d > treeMaxDepth) treeMaxDepth = d;
+        }
+
+        // 7. Show configuration dialog (with tree selector)
+        var configPath = __DIR__ + "config/capability-map.json";
+        var options = showCapabilityMapDialog(shell, treeMaxDepth, capabilities.size(), trees, getName, configPath);
+        if (!options) {
+            log.info("Cancelled by user.");
+            return;
+        }
+
+        // Set layout constants from dialog options
+        HEADER_HEIGHT = options.headerHeight;
+        ROOT_GAP = options.rootGap;
+        VIEW_MARGIN = options.viewMargin;
+        TARGET_ASPECT_RATIO = options.aspectRatio;
+
+        // 7b. Find selected nodes anywhere in the tree hierarchy.
+        // Each checked item becomes a root in the map. If a checked item
+        // is a descendant of another checked item, only the ancestor is used
+        // (its subtree already includes the descendant).
+        var selectedIds = options.selectedRootIds;
+
+        function findSelectedNodes(nodeList) {
+            var found = [];
+            for (var i = 0; i < nodeList.length; i++) {
+                var node = nodeList[i];
+                if (selectedIds.indexOf(node.element.id) >= 0) {
+                    found.push(node);
+                    // Don't recurse — this node's subtree is already included
+                } else if (node.children.length > 0) {
+                    found = found.concat(findSelectedNodes(node.children));
+                }
+            }
+            return found;
+        }
+
+        trees = findSelectedNodes(trees);
+        if (trees.length === 0) {
+            window.alert("No capabilities selected.");
+            return;
+        }
+        log.info("Selected " + trees.length + " capability root" + (trees.length !== 1 ? "s" : "") + " for the map.");
+
+        log.info("Options: maxDepth=" + (options.maxDepth === -1 ? "All" : options.maxDepth)
+            + ", sort=" + options.sortMode
+            + ", gap=" + options.gap + ", padding=" + options.padding
+            + ", headerHeight=" + HEADER_HEIGHT + ", rootGap=" + ROOT_GAP
+            + ", viewMargin=" + VIEW_MARGIN + ", aspectRatio=" + TARGET_ASPECT_RATIO);
+
+        // 8. Calculate uniform leaf size based on maximum label width
+        var maxLeafTextWidth = 0;
+
+        function findMaxLeafWidth(node, depth) {
+            // Treat as leaf if at depth limit or actually a leaf
+            var isEffectiveLeaf = node.isLeaf ||
+                (options.maxDepth !== -1 && depth >= options.maxDepth);
+
+            if (isEffectiveLeaf) {
+                var tw = measureTextWidth(getName(node.element));
+                if (tw > maxLeafTextWidth) maxLeafTextWidth = tw;
+                return;
+            }
+            for (var i = 0; i < node.children.length; i++) {
+                findMaxLeafWidth(node.children[i], depth + 1);
+            }
+        }
+
+        trees.forEach(function (tree) { findMaxLeafWidth(tree, 0); });
+
+        var leafWidth = Math.max(options.minLeafWidth, Math.min(maxLeafTextWidth + 2 * options.padding + 10, options.maxLeafWidth));
+        var leafHeight = options.leafHeight;
+        log.detail("  Leaf size: " + leafWidth + " x " + leafHeight);
+
+        // 9. Calculate node sizes bottom-up using adaptive flow layout
+        function calculateSize(node, depth) {
+            // Treat as leaf if at depth limit or actually a leaf
+            var isEffectiveLeaf = node.isLeaf ||
+                (options.maxDepth !== -1 && depth >= options.maxDepth);
+
+            if (isEffectiveLeaf) {
+                node.size = { w: leafWidth, h: leafHeight };
+                node.rows = [];
+                node._effectiveLeaf = true;
+                return;
+            }
+
+            node._effectiveLeaf = false;
+
+            // Compute child sizes first
+            for (var i = 0; i < node.children.length; i++) {
+                calculateSize(node.children[i], depth + 1);
+            }
+
+            // Sort children based on user preference
+            if (options.sortMode === "subtrees") {
+                // Subtrees first (alphabetical), then leaves (alphabetical)
+                node.children.sort(function (a, b) {
+                    if (a._effectiveLeaf !== b._effectiveLeaf) return a._effectiveLeaf ? 1 : -1;
+                    return getName(a.element).localeCompare(getName(b.element));
+                });
+            } else {
+                // Pure alphabetical
+                node.children.sort(function (a, b) {
+                    return getName(a.element).localeCompare(getName(b.element));
+                });
+            }
+
+            // Pack subtrees and leaves in separate bands to avoid mixing heights
+            var subtrees = [];
+            var leaves = [];
+            for (var j = 0; j < node.children.length; j++) {
+                if (node.children[j]._effectiveLeaf) {
+                    leaves.push(node.children[j]);
+                } else {
+                    subtrees.push(node.children[j]);
+                }
+            }
+
+            var layout;
+            if (subtrees.length > 0 && leaves.length > 0) {
+                layout = computeBandedFlowLayout(subtrees, leaves, options);
+            } else {
+                layout = computeFlowLayout(node.children, options);
+            }
+            node.size = { w: layout.w, h: layout.h };
+            node.rows = layout.rows;
+        }
+
+        trees.forEach(function (tree) { calculateSize(tree, 0); });
+
+        // 10. Create the view
+        var view = model.createArchimateView(options.viewName);
+        log.info("Created view: " + options.viewName);
+
+        // 11. Layout and add elements to the view
+        function addNode(node, parentObj, relX, relY, depth) {
+            var diagObj;
+            if (parentObj) {
+                diagObj = view.add(node.element, 0, 0, node.size.w, node.size.h);
+                parentObj.add(diagObj, relX, relY);
+            } else {
+                diagObj = view.add(node.element, relX, relY, node.size.w, node.size.h);
+            }
+
+            // Color by depth: effective leaves get leaf color, others get depth-based color
+            if (node._effectiveLeaf) {
+                diagObj.fillColor = options.leafColor;
+            } else {
+                var colorIdx = Math.min(depth, options.depthColors.length - 1);
+                diagObj.fillColor = options.depthColors[colorIdx];
+            }
+
+            // Show icon setting
+            diagObj.showIcon = options.showIcon;
+
+            // Font settings
+            var font = node._effectiveLeaf ? options.leafFont : options.parentFont;
+            diagObj.fontName = font.name;
+            diagObj.fontSize = font.size;
+            if (font.style) diagObj.fontStyle = font.style;
+            if (font.color) diagObj.fontColor = font.color;
+
+            // Center text on leaves; top-align on parents so label doesn't overlap children
+            diagObj.textAlignment = 2; // CENTER
+            if (!node._effectiveLeaf) {
+                try { diagObj.textPosition = 0; } catch (e) { /* property may not exist */ }
+            } else {
+                try { diagObj.textPosition = 1; } catch (e) { /* property may not exist */ }
+            }
+
+            // Position children row by row
+            if (!node._effectiveLeaf) {
+                var y = HEADER_HEIGHT;
+                for (var r = 0; r < node.rows.length; r++) {
+                    var row = node.rows[r];
+                    // Align the row horizontally according to the selected option to maximize aesthetic symmetry and balance
+                    var rowOffsetX = 0;
+                    if (options.alignment === "center") {
+                        rowOffsetX = Math.max(0, (node.size.w - 2 * options.padding - row.width) / 2);
+                    } else if (options.alignment === "right") {
+                        rowOffsetX = Math.max(0, node.size.w - 2 * options.padding - row.width);
+                    }
+
+                    if (row.placements && row.placements.length > 0) {
+                        for (var p = 0; p < row.placements.length; p++) {
+                            var placement = row.placements[p];
+                            addNode(
+                                placement.item,
+                                diagObj,
+                                options.padding + rowOffsetX + placement.x,
+                                y + placement.y,
+                                depth + 1
+                            );
+                        }
+                    } else {
+                        var x = options.padding + rowOffsetX;
+                        for (var i = 0; i < row.items.length; i++) {
+                            var child = row.items[i];
+                            // Top-align children within their row
+                            var cy = y;
+                            addNode(child, diagObj, x, cy, depth + 1);
+                            x += child.size.w + options.gap;
+                        }
+                    }
+                    y += row.height + options.gap;
+                }
+            }
+
+            return diagObj;
+        }
+
+        // Arrange root trees horizontally
+        var cursorX = VIEW_MARGIN;
+        trees.forEach(function (tree) {
+            addNode(tree, null, cursorX, VIEW_MARGIN, 0);
+            cursorX += tree.size.w + ROOT_GAP;
+        });
+
+        // 12. Open the view
+        view.openInUI();
+
+        log.success("Build Capability Map complete. " + trees.length + " root tree" + (trees.length !== 1 ? "s" : "") + " rendered.");
+    } catch (error) {
+        log.error("Script failed: " + error.toString());
+        if (error.stack) log.error(error.stack);
+        window.alert("Error: " + error.message);
+    }
+})();
