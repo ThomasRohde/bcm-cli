@@ -20,10 +20,16 @@ export async function exportPng(
   let browser;
   try {
     browser = await pw.chromium.launch();
-    const page = await browser.newPage();
-    await page.setViewportSize({
-      width: Math.ceil(width * scale),
-      height: Math.ceil(height * scale),
+    // Use deviceScaleFactor for DPI scaling instead of enlarging the viewport.
+    // Viewport matches content + body padding (20px each side) so min-height:100vh
+    // doesn't add whitespace.
+    const padding = 40; // 20px body padding × 2
+    const page = await browser.newPage({
+      deviceScaleFactor: scale,
+      viewport: {
+        width: Math.ceil(width + padding),
+        height: Math.ceil(height + padding),
+      },
     });
     await page.setContent(html, { waitUntil: "networkidle" });
     await page.screenshot({ path: outPath, fullPage: true });
