@@ -21,9 +21,10 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build && npm run test",
-    "bump:patch": "npm version patch --no-git-tag-version && pnpm build",
-    "bump:minor": "npm version minor --no-git-tag-version && pnpm build",
-    "bump:major": "npm version major --no-git-tag-version && pnpm build"
+    "bump:badge": "node -e \"const fs=require('fs');const v=require('./package.json').version;const r=fs.readFileSync('README.md','utf8');fs.writeFileSync('README.md',r.replace(/version-[^-]+-blue/,'version-'+v+'-blue'));\"",
+    "bump:patch": "npm version patch --no-git-tag-version && pnpm run bump:badge && pnpm build",
+    "bump:minor": "npm version minor --no-git-tag-version && pnpm run bump:badge && pnpm build",
+    "bump:major": "npm version major --no-git-tag-version && pnpm run bump:badge && pnpm build"
   },
   "keywords": [
     "business-capability-map",
