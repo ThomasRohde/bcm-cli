@@ -127,7 +127,7 @@ bcm inspect model.json
 
 ### `bcm guide`
 
-Print the full CLI schema (commands, error codes, defaults) as JSON. Useful for LLM agents to understand the CLI interface.
+Print the full CLI schema (commands, flags, error codes, defaults, and input schemas) as JSON. Useful for LLM agents to understand the CLI interface.
 
 ```bash
 bcm guide
@@ -147,11 +147,11 @@ The CLI auto-detects the input format:
 
 Field names are auto-detected from common conventions:
 
-- **Name:** `name`, `title`, `label`, `capability`, `capabilityName`
-- **Description:** `description`, `desc`, `summary`, `details`
-- **Children:** `children`, `subCapabilities`, `capabilities`, `items`
-- **Parent:** `parent`, `parentName`, `parent_id`, `parentId`
-- **ID:** `id`, `key`, `code`, `identifier`
+- **Name:** `name`, `title`, `label`, `capability`, `capabilityName`, `capability_name`
+- **Description:** `description`, `desc`, `documentation`, `doc`, `summary`, `details`, `text`
+- **Children:** `children`, `subCapabilities`, `sub_capabilities`, `subcapabilities`, `capabilities`, `items`, `nodes`, `subs`, `sub`
+- **Parent:** `parent`, `parentName`, `parent_name`, `parentId`, `parent_id`, `parentCapability`, `parent_capability`
+- **ID:** `id`, `ID`, `key`, `code`, `identifier`
 
 Override auto-detection with explicit field flags:
 
@@ -213,6 +213,13 @@ bcm render model.json --theme my-theme.json
   "typography": {
     "parentFont": { "name": "Segoe UI", "size": 9, "style": "bold" },
     "leafFont": { "name": "Segoe UI", "size": 9, "style": "" }
+  },
+  "spacing": {
+    "gap": 8,
+    "padding": 12,
+    "headerHeight": 40,
+    "rootGap": 30,
+    "viewMargin": 20
   },
   "display": {
     "cornerRadius": 4,
@@ -312,7 +319,7 @@ Agent mode is auto-detected when `LLM=true`, `CI=true`, or stdout is not a TTY.
 ## Development
 
 ```bash
-git clone https://github.com/your-org/bcm-cli.git
+git clone https://github.com/ThomasRohde/bcm-cli.git
 cd bcm-cli
 pnpm install
 pnpm build
