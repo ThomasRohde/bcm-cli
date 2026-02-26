@@ -1,6 +1,6 @@
 {
   "name": "bcm-cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Agent-first CLI for rendering Business Capability Maps from JSON to SVG, HTML, PNG, and PDF",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,7 +20,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build && npm run test"
+    "prepublishOnly": "npm run build && npm run test",
+    "bump:patch": "npm version patch --no-git-tag-version && pnpm build",
+    "bump:minor": "npm version minor --no-git-tag-version && pnpm build",
+    "bump:major": "npm version major --no-git-tag-version && pnpm build"
   },
   "keywords": [
     "business-capability-map",

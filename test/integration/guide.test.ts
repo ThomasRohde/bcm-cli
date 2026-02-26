@@ -49,6 +49,33 @@ describe("guide command", () => {
     expect(result.examples[0]).toHaveProperty("description");
   });
 
+  it("contains input_schemas with all three schema types", () => {
+    const { envelope } = runGuide(generateRequestId());
+    const result = envelope.result as any;
+    expect(result.input_schemas).toBeDefined();
+    expect(result.input_schemas.description).toContain("auto-detected");
+
+    // field_detection
+    const fd = result.input_schemas.field_detection;
+    expect(fd.name.required).toBe(true);
+    expect(fd.name.candidates).toContain("name");
+    expect(fd.children.candidates).toContain("children");
+    expect(fd.parent.candidates).toContain("parent_id");
+    expect(fd.id.candidates).toContain("id");
+
+    // schemas
+    const schemas = result.input_schemas.schemas;
+    expect(schemas.nested).toBeDefined();
+    expect(schemas.nested.example).toBeInstanceOf(Array);
+    expect(schemas.flat).toBeDefined();
+    expect(schemas.flat.example).toBeInstanceOf(Array);
+    expect(schemas.simple).toBeDefined();
+    expect(schemas.simple.example).toBeInstanceOf(Array);
+
+    // wrapper_support
+    expect(result.input_schemas.wrapper_support).toContain("--unwrap");
+  });
+
   it("has typed flag metadata on commands", () => {
     const { envelope } = runGuide(generateRequestId());
     const result = envelope.result as any;

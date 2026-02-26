@@ -1,3 +1,5 @@
+declare const __VERSION__: string;
+
 import { Command } from "commander";
 import { generateRequestId } from "./cli/request-id.js";
 import { writeEnvelope, writeStderr, setDiagnosticMode, writeStderrVerbose } from "./cli/output.js";
@@ -23,7 +25,17 @@ const program = new Command();
 program
   .name("bcm")
   .description("Agent-first CLI for rendering Business Capability Maps from JSON")
-  .version("0.1.0");
+  .version(__VERSION__)
+  .addHelpText("after", `
+Input JSON schemas (auto-detected):
+
+  nested   Array of objects with a children field (e.g. children, subCapabilities)
+  flat     Array of objects with a parent reference field (e.g. parent_id, parentName)
+  simple   Array of objects with just a name — rendered as flat leaf nodes
+
+Fields are auto-detected. Override with --nameField, --childrenField, etc.
+Run "bcm guide" for full schema documentation with examples.
+`);
 
 // --- guide ---
 program

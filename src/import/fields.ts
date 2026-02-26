@@ -26,7 +26,7 @@ function firstMatchingKey(
 // Name field
 // ---------------------------------------------------------------------------
 
-const NAME_CANDIDATES = [
+export const NAME_CANDIDATES = [
   "name",
   "title",
   "label",
@@ -59,7 +59,7 @@ export function findNameField(
 // Description field
 // ---------------------------------------------------------------------------
 
-const DESC_CANDIDATES = [
+export const DESC_CANDIDATES = [
   "description",
   "desc",
   "documentation",
@@ -84,7 +84,7 @@ export function findDescField(
 // Children field
 // ---------------------------------------------------------------------------
 
-const CHILDREN_CANDIDATES = [
+export const CHILDREN_CANDIDATES = [
   "children",
   "subCapabilities",
   "sub_capabilities",
@@ -128,7 +128,7 @@ export function findChildrenField(
 // Parent field
 // ---------------------------------------------------------------------------
 
-const PARENT_CANDIDATES = [
+export const PARENT_CANDIDATES = [
   "parent",
   "parentName",
   "parent_name",
@@ -153,7 +153,7 @@ export function findParentField(
 // ID field
 // ---------------------------------------------------------------------------
 
-const ID_CANDIDATES = ["id", "ID", "key", "code", "identifier"];
+export const ID_CANDIDATES = ["id", "ID", "key", "code", "identifier"];
 
 /**
  * Detect the field that holds a unique identifier for the capability.

@@ -1,6 +1,10 @@
 import { successEnvelope } from "../envelope.js";
 import { DEFAULT_LAYOUT_OPTIONS, DEFAULT_THEME, SCHEMA_VERSION } from "../../core/defaults.js";
 import { ErrorCode, exitCodeForError, isRetryable, suggestedAction } from "../errors.js";
+import {
+  NAME_CANDIDATES, DESC_CANDIDATES, CHILDREN_CANDIDATES,
+  PARENT_CANDIDATES, ID_CANDIDATES,
+} from "../../import/fields.js";
 import type { Envelope, FlagMeta } from "../../core/types.js";
 
 const IMPORT_FLAGS: Record<string, FlagMeta> = {
@@ -98,6 +102,47 @@ export function runGuide(requestId: string): { envelope: Envelope<unknown>; exit
     defaults: {
       layout: DEFAULT_LAYOUT_OPTIONS,
       theme: DEFAULT_THEME,
+    },
+    input_schemas: {
+      description: "BCM accepts JSON arrays of capability objects. Three schema layouts are auto-detected.",
+      field_detection: {
+        name:        { candidates: NAME_CANDIDATES, fallback: "first string-valued field", required: true },
+        description: { candidates: DESC_CANDIDATES, fallback: null, required: false },
+        children:    { candidates: CHILDREN_CANDIDATES, fallback: "first field with array of objects", required: false },
+        parent:      { candidates: PARENT_CANDIDATES, fallback: null, required: false },
+        id:          { candidates: ID_CANDIDATES, fallback: null, required: false },
+      },
+      schemas: {
+        nested: {
+          description: "Hierarchical tree using a children array field on each node",
+          detection: "An item contains a recognized children field",
+          example: [
+            { name: "Customer Management", description: "All customer capabilities", children: [
+              { name: "Onboarding", description: "New customer setup" },
+              { name: "Support", description: "Customer support" },
+            ]},
+          ],
+        },
+        flat: {
+          description: "Flat list with parent references that BCM assembles into a tree",
+          detection: "An item contains a recognized parent field",
+          example: [
+            { id: "1", name: "Customer Management", parent_id: null },
+            { id: "2", name: "Onboarding", parent_id: "1" },
+            { id: "3", name: "Support", parent_id: "1" },
+          ],
+        },
+        simple: {
+          description: "Plain array of items rendered as flat leaf nodes under a single root",
+          detection: "No children or parent fields detected",
+          example: [
+            { name: "Onboarding" },
+            { name: "Support" },
+            { name: "Billing" },
+          ],
+        },
+      },
+      wrapper_support: "If input is an object (not array), bcm auto-unwraps the first array-valued property. Use --unwrap to specify explicitly.",
     },
   };
 
