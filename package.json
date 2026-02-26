@@ -1,0 +1,73 @@
+{
+  "name": "bcm-cli",
+  "version": "0.1.0",
+  "description": "Agent-first CLI for rendering Business Capability Maps from JSON to SVG, HTML, PNG, and PDF",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "bcm": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run test"
+  },
+  "keywords": [
+    "business-capability-map",
+    "capability-map",
+    "bcm",
+    "enterprise-architecture",
+    "svg",
+    "visualization",
+    "cli",
+    "archimate",
+    "togaf"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThomasRohde/bcm-cli.git"
+  },
+  "homepage": "https://github.com/ThomasRohde/bcm-cli#readme",
+  "bugs": {
+    "url": "https://github.com/ThomasRohde/bcm-cli/issues"
+  },
+  "author": "Thomas Klok Rohde",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "opentype.js": "^1.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/opentype.js": "^1.3.8",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "peerDependencies": {
+    "playwright": "^1.50.0"
+  },
+  "peerDependenciesMeta": {
+    "playwright": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT"
+}

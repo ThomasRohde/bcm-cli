@@ -1,0 +1,5 @@
+[
+  { "id": "A", "name": "Alpha", "parent_id": "C" },
+  { "id": "B", "name": "Beta", "parent_id": "A" },
+  { "id": "C", "name": "Gamma", "parent_id": "B" }
+]

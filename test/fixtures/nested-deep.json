@@ -1,0 +1,45 @@
+[
+  {
+    "name": "Enterprise Architecture",
+    "children": [
+      {
+        "name": "Business Architecture",
+        "children": [
+          {
+            "name": "Capability Modeling",
+            "children": [
+              { "name": "Capability Assessment" },
+              { "name": "Capability Gap Analysis" },
+              { "name": "Capability Roadmap" }
+            ]
+          },
+          {
+            "name": "Value Stream Mapping",
+            "children": [
+              { "name": "Value Stream Analysis" },
+              { "name": "Value Stream Optimization" }
+            ]
+          },
+          { "name": "Business Process Design" }
+        ]
+      },
+      {
+        "name": "Technology Architecture",
+        "children": [
+          { "name": "Infrastructure Design" },
+          { "name": "Platform Engineering" },
+          { "name": "Cloud Architecture" },
+          { "name": "Security Architecture" }
+        ]
+      },
+      {
+        "name": "Data Architecture",
+        "children": [
+          { "name": "Data Modeling" },
+          { "name": "Data Governance" },
+          { "name": "Data Integration" }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+[
+  { "name": "Finance", "parent": null },
+  { "name": "Accounts Payable", "parent": "Finance" },
+  { "name": "Accounts Receivable", "parent": "Finance" },
+  { "name": "General Ledger", "parent": "Finance" },
+  { "name": "Human Resources", "parent": null },
+  { "name": "Recruitment", "parent": "Human Resources" },
+  { "name": "Payroll", "parent": "Human Resources" }
+]

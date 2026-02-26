@@ -1,0 +1,9 @@
+[
+  { "id": "1", "name": "Sales", "parent_id": null },
+  { "id": "2", "name": "Lead Generation", "parent_id": "1" },
+  { "id": "3", "name": "Opportunity Management", "parent_id": "1" },
+  { "id": "4", "name": "Quote Management", "parent_id": "1" },
+  { "id": "5", "name": "Marketing", "parent_id": null },
+  { "id": "6", "name": "Campaign Management", "parent_id": "5" },
+  { "id": "7", "name": "Brand Management", "parent_id": "5" }
+]

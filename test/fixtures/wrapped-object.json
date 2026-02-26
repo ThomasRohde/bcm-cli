@@ -1,0 +1,13 @@
+{
+  "metadata": { "version": "1.0", "source": "export" },
+  "capabilities": [
+    {
+      "name": "Supply Chain",
+      "children": [
+        { "name": "Procurement" },
+        { "name": "Logistics" },
+        { "name": "Inventory Management" }
+      ]
+    }
+  ]
+}

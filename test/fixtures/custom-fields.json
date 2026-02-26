@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Innovation",
+    "doc": "Innovation and R&D",
+    "subCapabilities": [
+      { "title": "Research", "doc": "Research activities" },
+      { "title": "Prototyping", "doc": "Prototype development" }
+    ]
+  }
+]

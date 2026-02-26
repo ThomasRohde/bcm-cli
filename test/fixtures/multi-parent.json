@@ -1,0 +1,6 @@
+[
+  { "id": "1", "name": "Shared Service", "parent_id": "2" },
+  { "id": "1", "name": "Shared Service", "parent_id": "3" },
+  { "id": "2", "name": "Division A" },
+  { "id": "3", "name": "Division B" }
+]

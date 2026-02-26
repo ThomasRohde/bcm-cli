@@ -1,0 +1,9 @@
+{
+  "name": "IT Operations",
+  "description": "Information Technology Operations",
+  "children": [
+    { "name": "Service Desk" },
+    { "name": "Incident Management" },
+    { "name": "Change Management" }
+  ]
+}
