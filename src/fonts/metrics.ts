@@ -9,6 +9,11 @@ export function createStubMeasurer(charWidth: number = 7): MeasureTextFn {
 
 let cachedMeasurer: MeasureTextFn | null = null;
 
+/** Reset the font measurer cache (for testing). */
+export function resetFontCache(): void {
+  cachedMeasurer = null;
+}
+
 export async function createFontMeasurer(
   fontPath: string,
   fontSize: number,

@@ -1,5 +1,13 @@
 import type { Envelope } from "../core/types.js";
 
+let quietMode = false;
+let verboseMode = false;
+
+export function setDiagnosticMode(quiet: boolean, verbose: boolean): void {
+  quietMode = quiet;
+  verboseMode = verbose;
+}
+
 export function isAgentMode(): boolean {
   if (process.env.LLM === "true") return true;
   if (process.env.CI === "true") return true;
@@ -12,5 +20,11 @@ export function writeEnvelope<T>(envelope: Envelope<T>): void {
 }
 
 export function writeStderr(message: string): void {
+  if (quietMode) return;
+  process.stderr.write(message + "\n");
+}
+
+export function writeStderrVerbose(message: string): void {
+  if (!verboseMode) return;
   process.stderr.write(message + "\n");
 }

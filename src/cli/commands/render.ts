@@ -1,5 +1,6 @@
-import { statSync } from "node:fs";
-import { join, basename, extname } from "node:path";
+import { statSync, existsSync } from "node:fs";
+import { join, basename, extname, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type {
   Envelope,
   RenderResult,
@@ -12,13 +13,14 @@ import type {
 import { successEnvelope, errorEnvelope } from "../envelope.js";
 import { BcmAppError } from "../errors.js";
 import { readInput } from "../../import/reader.js";
-import { importJson } from "../../import/index.js";
+import { importJson, filterRoots } from "../../import/index.js";
+import { writeStderrVerbose } from "../output.js";
 import { layoutTrees } from "../../layout/index.js";
 import { renderSvg } from "../../render/svg-renderer.js";
 import { wrapHtml } from "../../render/html-wrapper.js";
 import { resolveTheme } from "../../render/theme.js";
 import { atomicWrite } from "../../export/file-writer.js";
-import { createStubMeasurer } from "../../fonts/metrics.js";
+import { createStubMeasurer, createFontMeasurer } from "../../fonts/metrics.js";
 
 export async function runRender(
   inputPath: string | undefined,
@@ -35,8 +37,19 @@ export async function runRender(
   try {
     // --- Import ---
     const importStart = Date.now();
-    const raw = readInput(inputPath);
+    writeStderrVerbose("[render] Reading input...");
+    const raw = readInput(importOpts.stdin ? undefined : inputPath);
+    writeStderrVerbose("[render] Parsing and normalizing...");
     const importResult = importJson(raw, importOpts);
+
+    // --- Root filtering ---
+    if (importOpts.root && importOpts.root.length > 0) {
+      writeStderrVerbose(`[render] Filtering roots: ${importOpts.root.join(", ")}`);
+      const { filtered, warnings: rootWarnings } = filterRoots(importResult.roots, importOpts.root);
+      importResult.warnings.push(...rootWarnings);
+      importResult.roots.length = 0;
+      importResult.roots.push(...filtered);
+    }
     stages.import_ms = Date.now() - importStart;
 
     // --- Validate ---
@@ -45,6 +58,7 @@ export async function runRender(
     stages.validate_ms = Date.now() - validateStart;
 
     // --- Theme ---
+    writeStderrVerbose("[render] Resolving theme...");
     const theme = resolveTheme(
       {
         font: fontName,
@@ -54,12 +68,24 @@ export async function runRender(
     );
 
     // --- Layout ---
+    writeStderrVerbose("[render] Computing layout...");
     const layoutStart = Date.now();
-    const measureText = createStubMeasurer();
+    const fontSizeNum = fontSize ? parseInt(fontSize, 10) : theme.typography.leafFont.size;
+    let measureText;
+    const pkgRoot = dirname(dirname(dirname(fileURLToPath(import.meta.url))));
+    const interFontPath = join(pkgRoot, "assets", "fonts", "Inter-Regular.ttf");
+    if (existsSync(interFontPath)) {
+      writeStderrVerbose("[render] Using Inter font metrics");
+      measureText = await createFontMeasurer(interFontPath, fontSizeNum);
+    } else {
+      writeStderrVerbose("[render] Inter font not found, using stub measurer");
+      measureText = createStubMeasurer();
+    }
     const layoutResult = layoutTrees(importResult.roots, layoutOpts, measureText);
     stages.layout_ms = Date.now() - layoutStart;
 
     // --- Render ---
+    writeStderrVerbose("[render] Rendering SVG...");
     const renderStart = Date.now();
     const svg = renderSvg(layoutResult, theme);
     const html = wrapHtml(
@@ -71,6 +97,7 @@ export async function runRender(
     stages.render_ms = Date.now() - renderStart;
 
     // --- Export ---
+    writeStderrVerbose("[render] Exporting artefacts...");
     const exportStart = Date.now();
     const artefacts: Artefact[] = [];
     const baseName = inputPath
@@ -118,7 +145,7 @@ export async function runRender(
       if (exportOpts.pdf) {
         const pdfPath = join(exportOpts.outDir, `${baseName}.pdf`);
         const { exportPdf } = await import("../../export/playwright-export.js");
-        await exportPdf(html, pdfPath, exportOpts.pageSize, exportOpts.pdfMargin);
+        await exportPdf(html, pdfPath, exportOpts.pageSize, exportOpts.pdfMargin, layoutResult.totalWidth, layoutResult.totalHeight);
         artefacts.push({
           type: "pdf",
           path: pdfPath,

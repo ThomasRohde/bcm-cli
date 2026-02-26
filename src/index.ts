@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { generateRequestId } from "./cli/request-id.js";
-import { writeEnvelope, writeStderr } from "./cli/output.js";
+import { writeEnvelope, writeStderr, setDiagnosticMode, writeStderrVerbose } from "./cli/output.js";
 import { errorEnvelope } from "./cli/envelope.js";
 import { BcmAppError } from "./cli/errors.js";
 import { runGuide } from "./cli/commands/guide.js";
@@ -10,12 +10,12 @@ import { runRender } from "./cli/commands/render.js";
 import type { ImportOptions, ExportOptions, LayoutOptions } from "./core/types.js";
 import {
   nameFieldOption, descFieldOption, childrenFieldOption, parentFieldOption, idFieldOption,
-  unwrapOption, stdinOption, maxDepthOption, sortOption,
+  unwrapOption, stdinOption, maxDepthOption, sortOption, rootOption,
   gapOption, paddingOption, headerHeightOption, alignmentOption, aspectRatioOption,
   rootGapOption, marginOption, leafHeightOption, minLeafWidthOption, maxLeafWidthOption,
   themeOption, fontOption, fontSizeOption, outDirOption, svgOption, noSvgOption,
   htmlOption, pngOption, pdfOption, scaleOption, pageSizeOption, pdfMarginOption,
-  dryRunOption, quietOption, verboseOption,
+  dryRunOption, quietOption, verboseOption, outputOption,
 } from "./cli/options.js";
 
 const program = new Command();
@@ -45,7 +45,8 @@ function addImportOptions(cmd: Command): Command {
     .addOption(parentFieldOption)
     .addOption(idFieldOption)
     .addOption(unwrapOption)
-    .addOption(stdinOption);
+    .addOption(stdinOption)
+    .addOption(rootOption);
 }
 
 function parseImportOpts(opts: Record<string, unknown>): ImportOptions {
@@ -57,6 +58,7 @@ function parseImportOpts(opts: Record<string, unknown>): ImportOptions {
     idField: opts.idField as string | undefined,
     unwrap: opts.unwrap as string | undefined,
     stdin: opts.stdin as boolean | undefined,
+    root: opts.root as string[] | undefined,
   };
 }
 
@@ -65,7 +67,11 @@ const inspectCmd = program
   .command("inspect [input]")
   .description("Detect schema fields and produce a structured summary");
 addImportOptions(inspectCmd)
+  .addOption(quietOption)
+  .addOption(verboseOption)
+  .addOption(outputOption)
   .action((input: string | undefined, opts: Record<string, unknown>) => {
+    setDiagnosticMode(opts.quiet as boolean, opts.verbose as boolean);
     const requestId = generateRequestId();
     const { envelope, exitCode } = runInspect(input, parseImportOpts(opts), requestId);
     writeEnvelope(envelope);
@@ -77,7 +83,11 @@ const validateCmd = program
   .command("validate [input]")
   .description("Import + validate; report issues; no artefacts");
 addImportOptions(validateCmd)
+  .addOption(quietOption)
+  .addOption(verboseOption)
+  .addOption(outputOption)
   .action((input: string | undefined, opts: Record<string, unknown>) => {
+    setDiagnosticMode(opts.quiet as boolean, opts.verbose as boolean);
     const requestId = generateRequestId();
     const { envelope, exitCode } = runValidate(input, parseImportOpts(opts), requestId);
     writeEnvelope(envelope);
@@ -116,7 +126,9 @@ addImportOptions(renderCmd)
   .addOption(dryRunOption)
   .addOption(quietOption)
   .addOption(verboseOption)
+  .addOption(outputOption)
   .action(async (input: string | undefined, opts: Record<string, unknown>) => {
+    setDiagnosticMode(opts.quiet as boolean, opts.verbose as boolean);
     const requestId = generateRequestId();
     const importOpts = parseImportOpts(opts);
     const layoutOpts: LayoutOptions = {

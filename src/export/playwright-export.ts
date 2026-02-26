@@ -35,11 +35,25 @@ export async function exportPng(
   }
 }
 
+/** Parse page size string into width/height in px (at 96 DPI). */
+export function parsePageSize(pageSize: string): { width: number; height: number } {
+  if (pageSize === "A4") return { width: 794, height: 1123 }; // 210mm x 297mm at 96 DPI
+  if (pageSize === "Letter") return { width: 816, height: 1056 }; // 8.5in x 11in at 96 DPI
+  if (pageSize.includes("x")) {
+    const [w, h] = pageSize.split("x").map((s) => parseInt(s.trim(), 10));
+    return { width: w, height: h };
+  }
+  // Fallback to A4
+  return { width: 794, height: 1123 };
+}
+
 export async function exportPdf(
   html: string,
   outPath: string,
   pageSize: string,
   margin: string,
+  contentWidth?: number,
+  contentHeight?: number,
 ): Promise<void> {
   let pw: typeof import("playwright");
   try {
@@ -55,7 +69,25 @@ export async function exportPdf(
   try {
     browser = await pw.chromium.launch();
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle" });
+
+    // Scale-to-fit: if content exceeds page, inject CSS transform
+    let htmlToUse = html;
+    if (contentWidth && contentHeight) {
+      const pageDims = parsePageSize(pageSize);
+      // Account for margins (parse mm values, approximate 1mm ≈ 3.78px)
+      const marginPx = parseFloat(margin) * 3.78;
+      const availW = pageDims.width - 2 * marginPx;
+      const availH = pageDims.height - 2 * marginPx;
+      const scale = Math.min(availW / contentWidth, availH / contentHeight, 1);
+      if (scale < 1) {
+        htmlToUse = html.replace(
+          "</style>",
+          `  svg { transform: scale(${scale.toFixed(4)}); transform-origin: top left; }\n</style>`,
+        );
+      }
+    }
+
+    await page.setContent(htmlToUse, { waitUntil: "networkidle" });
 
     const pdfOptions: Record<string, unknown> = {
       path: outPath,

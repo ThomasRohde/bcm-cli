@@ -1,0 +1,1398 @@
+[
+  {
+    "name": "Software Engineering Discipline",
+    "description": "End-to-end capabilities required to design, build, test, secure, release, operate, and improve software products and platforms at scale.",
+    "children": [
+      {
+        "name": "Engineering Strategy and Governance",
+        "description": "Sets direction, guardrails, decision rights, and governance mechanisms for the software engineering discipline.",
+        "children": [
+          {
+            "name": "Engineering Vision and Strategy",
+            "description": "Defines the multi-year engineering strategy aligned to business, product, risk, and technology objectives.",
+            "children": []
+          },
+          {
+            "name": "Engineering Operating Model Design",
+            "description": "Defines team boundaries, responsibilities, interaction modes, and service ownership model for engineering.",
+            "children": []
+          },
+          {
+            "name": "Policies, Standards, and Guardrails",
+            "description": "Establishes mandatory engineering policies, coding standards, and reusable guardrails.",
+            "children": []
+          },
+          {
+            "name": "Engineering Decision Governance",
+            "description": "Manages engineering decision forums, escalation paths, and documented decision records.",
+            "children": []
+          },
+          {
+            "name": "Risk, Compliance, and Audit Coordination",
+            "description": "Coordinates engineering evidence and actions for regulatory, compliance, and internal audit requirements.",
+            "children": []
+          },
+          {
+            "name": "Engineering Financial Management",
+            "description": "Plans and tracks engineering spend, unit economics, and cost optimization initiatives.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Product and Requirements Engineering",
+        "description": "Turns business intent into actionable, testable, and traceable requirements for software delivery.",
+        "children": [
+          {
+            "name": "Problem Framing and Discovery",
+            "description": "Frames customer and business problems, hypotheses, and desired outcomes before implementation.",
+            "children": []
+          },
+          {
+            "name": "Stakeholder and Domain Elicitation",
+            "description": "Elicits requirements, constraints, and priorities from stakeholders and domain experts.",
+            "children": []
+          },
+          {
+            "name": "Requirements Specification",
+            "description": "Documents functional and non-functional requirements in clear, testable formats.",
+            "children": [
+              {
+                "name": "User Stories and Use Cases",
+                "description": "Defines user stories, use cases, scenarios, and supporting examples for implementation and testing.",
+                "children": []
+              },
+              {
+                "name": "Executable Specifications",
+                "description": "Uses examples, rules, and machine-readable specifications to improve precision and automation.",
+                "children": []
+              },
+              {
+                "name": "Requirement Quality Assurance",
+                "description": "Checks requirement clarity, consistency, completeness, and testability before development.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Backlog and Scope Management",
+            "description": "Prioritizes, sequences, and manages work items and scope boundaries across releases.",
+            "children": []
+          },
+          {
+            "name": "Acceptance Criteria and Definition of Done",
+            "description": "Defines acceptance conditions and completion rules for work items and releases.",
+            "children": []
+          },
+          {
+            "name": "Requirements Traceability and Change Control",
+            "description": "Maintains traceability across requirements, design, implementation, tests, and production changes.",
+            "children": []
+          },
+          {
+            "name": "Non-Functional Requirements Engineering",
+            "description": "Specifies and validates performance, reliability, security, operability, and compliance requirements.",
+            "children": [
+              {
+                "name": "Performance and Capacity Requirements",
+                "description": "Defines measurable performance, throughput, and capacity targets.",
+                "children": []
+              },
+              {
+                "name": "Reliability and Availability Requirements",
+                "description": "Defines availability, recovery, and resiliency targets and constraints.",
+                "children": []
+              },
+              {
+                "name": "Operability and Supportability Requirements",
+                "description": "Defines logging, monitoring, alerting, and support readiness requirements.",
+                "children": []
+              },
+              {
+                "name": "Security and Privacy Requirements",
+                "description": "Defines security controls and privacy obligations as engineering requirements.",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Architecture and Design Engineering",
+        "description": "Designs fit-for-purpose software solutions and technical structures that satisfy business and operational requirements.",
+        "children": [
+          {
+            "name": "Solution Architecture",
+            "description": "Defines solution scope, structure, integration context, and technology choices across systems.",
+            "children": [
+              {
+                "name": "Context and System Decomposition",
+                "description": "Defines solution context, system boundaries, and major building blocks.",
+                "children": []
+              },
+              {
+                "name": "Technology Selection and Trade-off Analysis",
+                "description": "Evaluates technology options and documents trade-offs and rationale.",
+                "children": []
+              },
+              {
+                "name": "Reference Alignment and Architecture Principles",
+                "description": "Ensures solution architecture aligns to enterprise principles and reference patterns.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Application and Component Design",
+            "description": "Designs internal modules, responsibilities, boundaries, and interactions within applications.",
+            "children": []
+          },
+          {
+            "name": "Domain Modeling",
+            "description": "Creates shared domain concepts, bounded contexts, data semantics, and business rules models.",
+            "children": []
+          },
+          {
+            "name": "API and Interface Design",
+            "description": "Designs stable interfaces, contracts, versioning strategies, and interaction patterns.",
+            "children": [
+              {
+                "name": "Contract Modeling and Schema Design",
+                "description": "Designs interface contracts, schemas, and validation rules.",
+                "children": []
+              },
+              {
+                "name": "Versioning and Compatibility Strategy",
+                "description": "Defines versioning policies and backward/forward compatibility expectations.",
+                "children": []
+              },
+              {
+                "name": "API Usability and Consumer Experience",
+                "description": "Designs APIs for discoverability, consistency, and ease of adoption by consumers.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Data Persistence and State Design",
+            "description": "Designs data stores, schemas, transaction boundaries, and state management patterns.",
+            "children": []
+          },
+          {
+            "name": "Resilience and Failure Mode Design",
+            "description": "Designs for graceful degradation, fault isolation, recovery, and reliability under stress.",
+            "children": [
+              {
+                "name": "Failure Mode Analysis",
+                "description": "Identifies likely failures, blast radius, and mitigation strategies.",
+                "children": []
+              },
+              {
+                "name": "Graceful Degradation and Fallback Design",
+                "description": "Designs fallback paths and degradation behavior for partial failures.",
+                "children": []
+              },
+              {
+                "name": "Recovery and Idempotency Design",
+                "description": "Designs retries, idempotency, compensation, and recovery-safe behavior.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Architecture and Design Review",
+            "description": "Runs peer reviews and governance checkpoints for major design and architecture decisions.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "User Experience and Front-End Engineering",
+        "description": "Builds usable, accessible, and consistent user-facing experiences across channels and devices.",
+        "children": [
+          {
+            "name": "User Research and Journey Analysis",
+            "description": "Collects user insights and journey data to inform product and UI decisions.",
+            "children": []
+          },
+          {
+            "name": "Interaction Design",
+            "description": "Designs user flows, navigation, interaction patterns, and feedback behavior.",
+            "children": []
+          },
+          {
+            "name": "Visual Design and UI Consistency",
+            "description": "Applies visual standards, layout principles, and brand-aligned design patterns.",
+            "children": []
+          },
+          {
+            "name": "Design Systems and Component Libraries",
+            "description": "Maintains reusable UI components, tokens, and usage guidance for product teams.",
+            "children": []
+          },
+          {
+            "name": "Accessibility Engineering",
+            "description": "Builds and verifies accessible interfaces and content against accessibility requirements.",
+            "children": []
+          },
+          {
+            "name": "Usability Testing and Front-End Quality",
+            "description": "Evaluates usability and front-end behavior quality through testing and feedback loops.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Software Construction and Code Quality",
+        "description": "Implements software changes through maintainable code, sound engineering practices, and effective collaboration.",
+        "children": [
+          {
+            "name": "Code Implementation",
+            "description": "Implements features, fixes, and technical changes according to designs and standards.",
+            "children": []
+          },
+          {
+            "name": "Refactoring and Codebase Evolution",
+            "description": "Improves code structure, modularity, and readability without changing intended behavior.",
+            "children": []
+          },
+          {
+            "name": "Code Review and Peer Feedback",
+            "description": "Performs structured peer review to improve correctness, maintainability, and shared understanding.",
+            "children": [
+              {
+                "name": "Review Workflow and Standards",
+                "description": "Defines review expectations, checklists, and service levels for code review.",
+                "children": []
+              },
+              {
+                "name": "Automated Review Assistance",
+                "description": "Uses automated checks and bots to support human review decisions.",
+                "children": []
+              },
+              {
+                "name": "Knowledge Sharing Through Review",
+                "description": "Uses reviews to spread context, standards, and architectural understanding.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Pairing and Collaborative Programming",
+            "description": "Uses collaborative programming practices to improve delivery quality and knowledge transfer.",
+            "children": []
+          },
+          {
+            "name": "Dependency and Package Management",
+            "description": "Manages internal and external dependencies, versions, updates, and compatibility.",
+            "children": []
+          },
+          {
+            "name": "Configuration and Feature Flag Management",
+            "description": "Manages runtime configuration, environment settings, and feature toggles safely.",
+            "children": []
+          },
+          {
+            "name": "Coding Standards and Static Quality Rules",
+            "description": "Defines and enforces code style, complexity, and static quality thresholds.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Quality Engineering and Testing",
+        "description": "Provides test strategy, test execution, automation, and quality controls across the delivery lifecycle.",
+        "children": [
+          {
+            "name": "Test Strategy and Quality Planning",
+            "description": "Defines test approach, levels, responsibilities, and quality objectives for products and releases.",
+            "children": []
+          },
+          {
+            "name": "Unit and Component Testing",
+            "description": "Verifies isolated behavior of functions, classes, and components with automated tests.",
+            "children": []
+          },
+          {
+            "name": "Integration and Contract Testing",
+            "description": "Verifies interactions between components, services, and interfaces including contracts.",
+            "children": []
+          },
+          {
+            "name": "System and End-to-End Testing",
+            "description": "Validates business workflows and system behavior in realistic environments.",
+            "children": []
+          },
+          {
+            "name": "Performance and Scalability Testing",
+            "description": "Assesses response times, throughput, capacity, and behavior under load and stress.",
+            "children": []
+          },
+          {
+            "name": "Test Automation Frameworks and Tooling",
+            "description": "Builds and maintains automation frameworks, utilities, and execution infrastructure.",
+            "children": []
+          },
+          {
+            "name": "Test Data Management",
+            "description": "Provides representative, compliant, and maintainable test data and data provisioning practices.",
+            "children": []
+          },
+          {
+            "name": "Defect Management and Quality Triage",
+            "description": "Records, triages, prioritizes, and resolves defects and quality issues.",
+            "children": []
+          },
+          {
+            "name": "Quality Gates and Release Readiness",
+            "description": "Applies test and quality evidence thresholds before promotion and release.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Integration and API Engineering",
+        "description": "Enables reliable integration across services, applications, and platforms using APIs, events, and messaging.",
+        "children": [
+          {
+            "name": "API Lifecycle Management",
+            "description": "Manages API planning, design, versioning, publication, deprecation, and retirement.",
+            "children": []
+          },
+          {
+            "name": "Service-to-Service Integration",
+            "description": "Implements synchronous integrations across internal and external services.",
+            "children": []
+          },
+          {
+            "name": "Event-Driven Integration",
+            "description": "Implements event schemas, producers, consumers, and event processing patterns.",
+            "children": []
+          },
+          {
+            "name": "Messaging and Streaming Engineering",
+            "description": "Builds integrations using queues, topics, streams, and messaging middleware.",
+            "children": []
+          },
+          {
+            "name": "API Security and Traffic Management",
+            "description": "Applies authentication, authorization, rate limiting, and API gateway controls.",
+            "children": []
+          },
+          {
+            "name": "Integration Observability and Support",
+            "description": "Monitors integration health, failures, retries, and operational support processes.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Data and State Engineering within Applications",
+        "description": "Designs and operates application-level data, state, caching, and migration mechanisms.",
+        "children": [
+          {
+            "name": "Data Access Layer Engineering",
+            "description": "Implements data access abstractions, repositories, query patterns, and ORM usage.",
+            "children": []
+          },
+          {
+            "name": "Transactional Consistency Management",
+            "description": "Defines transaction boundaries, consistency strategies, and concurrency handling.",
+            "children": []
+          },
+          {
+            "name": "Schema Design and Migration Management",
+            "description": "Designs schemas and manages controlled database schema and data migrations.",
+            "children": []
+          },
+          {
+            "name": "Caching and State Optimization",
+            "description": "Implements caching, session/state handling, and performance-oriented state strategies.",
+            "children": []
+          },
+          {
+            "name": "Search and Index Integration",
+            "description": "Implements search indexing, query tuning, and search integration patterns.",
+            "children": []
+          },
+          {
+            "name": "Application Data Privacy and Retention Controls",
+            "description": "Implements privacy-aware data handling, minimization, masking, and retention behavior in applications.",
+            "children": []
+          },
+          {
+            "name": "Application Data Quality Controls",
+            "description": "Implements validation, reconciliation, and integrity checks for application-managed data.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Build, Packaging, and Release Engineering",
+        "description": "Automates build, packaging, CI/CD pipelines, release coordination, and deployment promotion controls.",
+        "children": [
+          {
+            "name": "Source Control and Branching Workflows",
+            "description": "Defines and operates branching, trunk-based or hybrid workflows, and merge controls.",
+            "children": []
+          },
+          {
+            "name": "Build Automation",
+            "description": "Automates compilation, linting, testing, and build steps across repositories.",
+            "children": []
+          },
+          {
+            "name": "Artifact Packaging and Repository Management",
+            "description": "Packages and stores build artifacts, containers, and release bundles securely.",
+            "children": []
+          },
+          {
+            "name": "Continuous Integration Pipelines",
+            "description": "Runs automated validation pipelines for code changes and pull requests.",
+            "children": [
+              {
+                "name": "Pipeline Orchestration and Templates",
+                "description": "Defines reusable pipeline patterns and execution flows.",
+                "children": []
+              },
+              {
+                "name": "Build Validation and Quality Checks",
+                "description": "Runs automated tests, linting, scans, and policy checks in CI.",
+                "children": []
+              },
+              {
+                "name": "Pipeline Performance and Reliability",
+                "description": "Monitors CI stability, queue time, and execution performance.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Release Orchestration and Coordination",
+            "description": "Coordinates releases, freeze windows, approvals, and multi-team rollout execution.",
+            "children": []
+          },
+          {
+            "name": "Environment Promotion and Deployment Automation",
+            "description": "Promotes builds across environments using automated and controlled deployment flows.",
+            "children": [
+              {
+                "name": "Deployment Strategies",
+                "description": "Implements blue-green, canary, rolling, or feature-flag-based deployment strategies.",
+                "children": []
+              },
+              {
+                "name": "Environment Configuration Promotion",
+                "description": "Promotes configuration and secrets changes safely across environments.",
+                "children": []
+              },
+              {
+                "name": "Deployment Verification and Smoke Tests",
+                "description": "Runs post-deploy checks to validate deployment success and service health.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Rollback, Roll-Forward, and Recovery Procedures",
+            "description": "Provides standardized rollback or roll-forward mechanisms when releases fail.",
+            "children": []
+          },
+          {
+            "name": "Versioning, Change Logs, and Release Notes",
+            "description": "Maintains versioning conventions, change summaries, and release communication artifacts.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Platform Engineering and Developer Experience",
+        "description": "Provides internal platforms, self-service tooling, and developer workflows that improve engineering throughput and reliability.",
+        "children": [
+          {
+            "name": "Internal Developer Platform Strategy",
+            "description": "Defines platform products, service boundaries, and platform engineering roadmap priorities.",
+            "children": [
+              {
+                "name": "Platform Product Management",
+                "description": "Defines platform value propositions, roadmaps, and service levels.",
+                "children": []
+              },
+              {
+                "name": "Platform Service Portfolio Management",
+                "description": "Manages the set of platform capabilities offered to engineering teams.",
+                "children": []
+              },
+              {
+                "name": "Platform Governance and Adoption Model",
+                "description": "Defines platform standards, adoption expectations, and exceptions.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Self-Service Environment Provisioning",
+            "description": "Provides self-service provisioning for development, test, and ephemeral environments.",
+            "children": []
+          },
+          {
+            "name": "Local Development Environment Tooling",
+            "description": "Standardizes local setup, bootstrapping, and reproducible development environments.",
+            "children": []
+          },
+          {
+            "name": "Golden Paths and Project Scaffolding",
+            "description": "Provides templates, starter kits, and paved-road engineering workflows.",
+            "children": [
+              {
+                "name": "Reference Templates and Starters",
+                "description": "Provides vetted starter templates and service blueprints.",
+                "children": []
+              },
+              {
+                "name": "Policy-as-Code Guardrails in Templates",
+                "description": "Embeds baseline policy checks and configurations into scaffolds.",
+                "children": []
+              },
+              {
+                "name": "Template Lifecycle and Version Management",
+                "description": "Maintains template versions, deprecations, and migration guidance.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Developer Portals and Service Catalogs",
+            "description": "Provides service catalog, ownership metadata, and documentation discovery for engineers.",
+            "children": []
+          },
+          {
+            "name": "Engineering Productivity Tooling",
+            "description": "Provides integrated tools and automations for coding, testing, debugging, and collaboration.",
+            "children": [
+              {
+                "name": "IDE and Editor Tooling Enablement",
+                "description": "Provides approved editor integrations, extensions, and defaults.",
+                "children": []
+              },
+              {
+                "name": "Workflow Automation and CLI Tooling",
+                "description": "Provides CLIs and automations for routine engineering workflows.",
+                "children": []
+              },
+              {
+                "name": "Productivity Data and Tooling Telemetry",
+                "description": "Measures tooling usage, friction points, and productivity signals.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Inner Source and Reuse Enablement",
+            "description": "Enables discoverability, reuse, and contribution to shared internal software assets.",
+            "children": []
+          },
+          {
+            "name": "Developer Support and Enablement Services",
+            "description": "Operates support channels, onboarding help, and issue resolution for engineering platforms.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Operations and Reliability Engineering",
+        "description": "Runs software services safely in production with strong observability, reliability, and incident response capabilities.",
+        "children": [
+          {
+            "name": "Production Service Operations",
+            "description": "Operates and administers production services, jobs, and runtime processes.",
+            "children": []
+          },
+          {
+            "name": "Site Reliability Engineering Practices",
+            "description": "Applies SRE principles including reliability budgets, automation, and service objectives.",
+            "children": [
+              {
+                "name": "Service Level Objectives and Error Budgets",
+                "description": "Defines and operates SLOs, SLIs, and error budget policies.",
+                "children": []
+              },
+              {
+                "name": "Toil Reduction and Reliability Automation",
+                "description": "Identifies and automates repetitive operational toil.",
+                "children": []
+              },
+              {
+                "name": "Reliability Review and Risk Management",
+                "description": "Reviews reliability risks and planned changes against service objectives.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Monitoring, Logging, and Tracing",
+            "description": "Implements telemetry collection, observability pipelines, dashboards, and diagnostics.",
+            "children": [
+              {
+                "name": "Telemetry Instrumentation Standards",
+                "description": "Defines instrumentation patterns and semantic conventions.",
+                "children": []
+              },
+              {
+                "name": "Observability Data Pipeline Management",
+                "description": "Operates telemetry ingestion, storage, routing, and retention pipelines.",
+                "children": []
+              },
+              {
+                "name": "Dashboards, Alerts, and Diagnostics",
+                "description": "Maintains actionable dashboards, alerts, and diagnostic workflows.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Incident Detection and Response",
+            "description": "Detects, triages, responds to, and communicates operational incidents.",
+            "children": [
+              {
+                "name": "On-Call and Escalation Management",
+                "description": "Defines on-call rotations, escalation paths, and response responsibilities.",
+                "children": []
+              },
+              {
+                "name": "Incident Command and Coordination",
+                "description": "Coordinates triage, mitigation, communications, and decision making during incidents.",
+                "children": []
+              },
+              {
+                "name": "Incident Communications",
+                "description": "Provides clear internal and external updates during service disruptions.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Problem Management and Root Cause Analysis",
+            "description": "Identifies systemic causes of incidents and coordinates corrective actions.",
+            "children": []
+          },
+          {
+            "name": "Capacity, Performance, and Cost Optimization",
+            "description": "Optimizes runtime capacity, performance efficiency, and operating costs.",
+            "children": []
+          },
+          {
+            "name": "Availability, Continuity, and Disaster Recovery",
+            "description": "Designs and validates availability targets, backups, failover, and recovery processes.",
+            "children": [
+              {
+                "name": "Backup and Restore Engineering",
+                "description": "Implements and validates backup and restore mechanisms.",
+                "children": []
+              },
+              {
+                "name": "Failover and Recovery Testing",
+                "description": "Tests failover procedures and validates recovery objectives.",
+                "children": []
+              },
+              {
+                "name": "Business Continuity Integration",
+                "description": "Coordinates software recovery practices with broader continuity arrangements.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Runbook and Operations Automation",
+            "description": "Automates repetitive operational tasks using scripts, workflows, and orchestration.",
+            "children": [
+              {
+                "name": "Operational Script and Workflow Automation",
+                "description": "Implements scripts and workflows for repeatable operations tasks.",
+                "children": []
+              },
+              {
+                "name": "Auto-Remediation Patterns",
+                "description": "Applies safe automated remediation for known and bounded failure modes.",
+                "children": []
+              },
+              {
+                "name": "Automation Safety Controls",
+                "description": "Defines approvals, guardrails, and rollback for operations automation.",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Security Engineering and Secure SDLC",
+        "description": "Embeds security into software engineering through secure design, build, test, release, and runtime practices.",
+        "children": [
+          {
+            "name": "Threat Modeling and Security Design Review",
+            "description": "Identifies threats and validates mitigations during design and architecture stages.",
+            "children": [
+              {
+                "name": "Threat Identification and Abuse Cases",
+                "description": "Identifies threats, abuse cases, and attacker paths for proposed designs.",
+                "children": []
+              },
+              {
+                "name": "Mitigation Design and Security Controls",
+                "description": "Defines mitigations and compensating controls for identified threats.",
+                "children": []
+              },
+              {
+                "name": "Security Review Sign-off and Exceptions",
+                "description": "Records review outcomes, exceptions, and remediation commitments.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Secure Coding Practices",
+            "description": "Applies secure coding standards and security-focused peer review during implementation.",
+            "children": [
+              {
+                "name": "Secure Coding Standards and Checklists",
+                "description": "Defines language-specific secure coding standards and checklists.",
+                "children": []
+              },
+              {
+                "name": "Security-Focused Code Review",
+                "description": "Integrates security concerns into code review workflows.",
+                "children": []
+              },
+              {
+                "name": "Developer Security Training Integration",
+                "description": "Embeds secure coding training into engineering workflows and onboarding.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Application Security Testing",
+            "description": "Performs SAST, DAST, IAST, and manual testing for application vulnerabilities.",
+            "children": [
+              {
+                "name": "Static Application Security Testing",
+                "description": "Runs and tunes static analysis for source and binaries.",
+                "children": []
+              },
+              {
+                "name": "Dynamic and Interactive Security Testing",
+                "description": "Performs dynamic testing and runtime-assisted application security testing.",
+                "children": []
+              },
+              {
+                "name": "Manual Security Review and Penetration Testing",
+                "description": "Performs expert-driven testing for high-risk applications and changes.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Software Composition and Dependency Security",
+            "description": "Manages open-source dependency risk, vulnerability exposure, and update remediation.",
+            "children": [
+              {
+                "name": "Dependency Inventory and SBOM Management",
+                "description": "Maintains component inventories and software bills of materials.",
+                "children": []
+              },
+              {
+                "name": "Dependency Vulnerability Monitoring",
+                "description": "Monitors dependency vulnerabilities and exposure continuously.",
+                "children": []
+              },
+              {
+                "name": "Secure Dependency Update Automation",
+                "description": "Automates dependency update proposals with testing and policy controls.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Secrets and Key Management in Delivery Pipelines",
+            "description": "Protects secrets, keys, and credentials used by developers, applications, and automation.",
+            "children": [
+              {
+                "name": "Secret Storage and Access Patterns",
+                "description": "Defines approved secret storage and access mechanisms.",
+                "children": []
+              },
+              {
+                "name": "Secret Rotation and Revocation",
+                "description": "Rotates and revokes secrets on schedule and on demand.",
+                "children": []
+              },
+              {
+                "name": "Secret Scanning and Exposure Response",
+                "description": "Detects exposed secrets and coordinates containment and rotation.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Infrastructure and Configuration Security Validation",
+            "description": "Validates infrastructure-as-code and configuration against security baselines.",
+            "children": []
+          },
+          {
+            "name": "Identity, Access, and Privileged Engineering Controls",
+            "description": "Controls developer and pipeline access, privileges, and separation of duties.",
+            "children": []
+          },
+          {
+            "name": "Software Supply Chain Security",
+            "description": "Protects build provenance, artifact integrity, and release chain trust.",
+            "children": [
+              {
+                "name": "Build Provenance and Attestation",
+                "description": "Generates and verifies provenance, attestations, and traceability for builds.",
+                "children": []
+              },
+              {
+                "name": "Artifact Integrity and Signing",
+                "description": "Applies signing and verification to artifacts, packages, and containers.",
+                "children": []
+              },
+              {
+                "name": "Trusted Build Environments",
+                "description": "Hardens and controls build environments and runners.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Vulnerability Management and Remediation",
+            "description": "Tracks, prioritizes, and remediates vulnerabilities within SLA and risk appetite.",
+            "children": [
+              {
+                "name": "Vulnerability Intake and Triage",
+                "description": "Ingests findings and triages by severity, exploitability, and asset criticality.",
+                "children": []
+              },
+              {
+                "name": "Remediation Planning and SLA Tracking",
+                "description": "Plans remediation, tracks SLAs, and manages risk exceptions.",
+                "children": []
+              },
+              {
+                "name": "Verification and Closure",
+                "description": "Verifies fixes and closes findings with evidence.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Security Incident Support and Forensics Readiness",
+            "description": "Supports investigation, containment, and evidence handling for software-related security incidents.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Documentation and Knowledge Management",
+        "description": "Captures and maintains engineering knowledge, operational guidance, and decision context for reuse and continuity.",
+        "children": [
+          {
+            "name": "Code and Inline Documentation",
+            "description": "Maintains code comments, annotations, and code-level usage documentation where needed.",
+            "children": []
+          },
+          {
+            "name": "Technical Design and Architecture Documentation",
+            "description": "Documents architecture, design rationale, and engineering decisions for traceability.",
+            "children": []
+          },
+          {
+            "name": "API Documentation and Developer Guides",
+            "description": "Publishes accurate API references, examples, and integration guidance.",
+            "children": []
+          },
+          {
+            "name": "Runbooks, Playbooks, and Support Documentation",
+            "description": "Maintains operational instructions for incidents, routine tasks, and service support.",
+            "children": []
+          },
+          {
+            "name": "Knowledge Base Curation and Information Architecture",
+            "description": "Structures and curates engineering knowledge repositories for findability and reuse.",
+            "children": []
+          },
+          {
+            "name": "Postmortems and Lessons Learned Capture",
+            "description": "Captures and disseminates lessons learned from incidents, delivery issues, and improvements.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Engineering Management and Ways of Working",
+        "description": "Coordinates delivery, teams, and collaboration models that enable predictable and sustainable software engineering outcomes.",
+        "children": [
+          {
+            "name": "Delivery Planning and Estimation",
+            "description": "Plans releases and iterations using estimation and forecasting approaches appropriate to context.",
+            "children": []
+          },
+          {
+            "name": "Flow Management and Work in Progress Control",
+            "description": "Manages workflow, bottlenecks, and WIP to improve delivery predictability and throughput.",
+            "children": []
+          },
+          {
+            "name": "Team Topologies and Interface Management",
+            "description": "Designs team interactions and ownership boundaries to reduce coordination overhead.",
+            "children": []
+          },
+          {
+            "name": "Cross-Team Dependency Management",
+            "description": "Identifies and coordinates dependencies, sequencing, and integration milestones across teams.",
+            "children": []
+          },
+          {
+            "name": "Stakeholder Communication and Reporting",
+            "description": "Communicates engineering plans, risks, status, and outcomes to stakeholders.",
+            "children": []
+          },
+          {
+            "name": "Change Enablement and Release Governance",
+            "description": "Coordinates change approvals, change windows, and operational readiness with control functions.",
+            "children": []
+          },
+          {
+            "name": "Third-Party Engineering and Vendor Coordination",
+            "description": "Coordinates engineering work with vendors, partners, and outsourced delivery providers.",
+            "children": []
+          },
+          {
+            "name": "Distributed Collaboration Practices",
+            "description": "Enables effective remote and distributed engineering collaboration across locations and time zones.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Talent and Capability Development",
+        "description": "Builds the workforce capabilities, roles, and learning systems needed for software engineering excellence.",
+        "children": [
+          {
+            "name": "Engineering Role and Skill Frameworks",
+            "description": "Defines roles, skill expectations, and competency progression for engineering disciplines.",
+            "children": []
+          },
+          {
+            "name": "Engineering Hiring and Selection",
+            "description": "Attracts and assesses engineering talent using structured hiring practices.",
+            "children": []
+          },
+          {
+            "name": "Onboarding and Time-to-Productivity",
+            "description": "Onboards engineers effectively and shortens time to safe, productive contribution.",
+            "children": []
+          },
+          {
+            "name": "Skills Assessment and Gap Analysis",
+            "description": "Assesses current skills and identifies gaps against strategy and platform needs.",
+            "children": []
+          },
+          {
+            "name": "Training, Learning Paths, and Certification",
+            "description": "Provides learning content, structured training paths, and optional certifications.",
+            "children": []
+          },
+          {
+            "name": "Coaching, Mentoring, and Technical Leadership",
+            "description": "Develops engineers through mentoring, coaching, and technical leadership practices.",
+            "children": []
+          },
+          {
+            "name": "Career Growth and Performance Development",
+            "description": "Supports fair progression, feedback, and growth planning for engineering staff.",
+            "children": []
+          },
+          {
+            "name": "Communities of Practice and Guilds",
+            "description": "Facilitates communities that share patterns, standards, and lessons across teams.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Metrics, Improvement, and Innovation Management",
+        "description": "Measures engineering effectiveness and quality, drives continuous improvement, and enables controlled innovation.",
+        "children": [
+          {
+            "name": "Engineering Metrics Framework",
+            "description": "Defines engineering metrics, owners, definitions, and reporting cadences.",
+            "children": [
+              {
+                "name": "Metric Definitions and Data Contracts",
+                "description": "Defines metrics, data sources, calculations, and ownership.",
+                "children": []
+              },
+              {
+                "name": "Metrics Governance and Review Cadence",
+                "description": "Runs governance for metric quality, interpretation, and review usage.",
+                "children": []
+              },
+              {
+                "name": "Scorecards and Executive Reporting",
+                "description": "Publishes scorecards tailored to teams, leaders, and control functions.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Delivery Flow and DORA Metrics",
+            "description": "Measures software delivery performance and flow efficiency using standard and context-specific metrics.",
+            "children": [
+              {
+                "name": "Flow Measurement Instrumentation",
+                "description": "Instruments toolchain events needed to calculate delivery flow metrics.",
+                "children": []
+              },
+              {
+                "name": "Benchmarking and Contextual Interpretation",
+                "description": "Interprets delivery metrics with context and benchmark comparisons.",
+                "children": []
+              },
+              {
+                "name": "Improvement Action Planning from Flow Data",
+                "description": "Uses flow data to prioritize and track improvements.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Quality and Defect Trend Analytics",
+            "description": "Analyzes quality trends, defect patterns, and predictive quality signals.",
+            "children": []
+          },
+          {
+            "name": "Reliability and Service Health Analytics",
+            "description": "Measures reliability outcomes and operational health trends for services.",
+            "children": []
+          },
+          {
+            "name": "Continuous Improvement and Kaizen Execution",
+            "description": "Runs improvement backlogs and experiments to address recurring pain points.",
+            "children": [
+              {
+                "name": "Retrospective and Learning Mechanisms",
+                "description": "Runs retrospectives and learning loops that produce actionable improvements.",
+                "children": []
+              },
+              {
+                "name": "Improvement Backlog Management",
+                "description": "Maintains and prioritizes improvement actions with owners and due dates.",
+                "children": []
+              },
+              {
+                "name": "Benefit Tracking for Improvements",
+                "description": "Measures impact of completed improvements against target outcomes.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Technical Debt Identification and Prioritization",
+            "description": "Identifies, quantifies, and prioritizes technical debt remediation.",
+            "children": [
+              {
+                "name": "Debt Discovery and Classification",
+                "description": "Identifies debt items and classifies by risk, cost, and impact.",
+                "children": []
+              },
+              {
+                "name": "Debt Valuation and Business Framing",
+                "description": "Frames debt in business terms including risk and delivery impact.",
+                "children": []
+              },
+              {
+                "name": "Debt Remediation Portfolio Planning",
+                "description": "Plans remediation work within capacity and strategic priorities.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Value Stream Mapping and Process Diagnostics",
+            "description": "Maps delivery value streams and diagnoses bottlenecks and waste.",
+            "children": []
+          },
+          {
+            "name": "Engineering Innovation and Experimentation",
+            "description": "Evaluates and pilots new engineering practices, tools, and architectural approaches.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "AI-Assisted Engineering and Automation",
+        "description": "Applies AI tools and agentic workflows safely and effectively across the software engineering lifecycle.",
+        "children": [
+          {
+            "name": "AI Tool Strategy and Governance for Engineering",
+            "description": "Defines approved AI use cases, guardrails, risk controls, and adoption strategy for engineering.",
+            "children": [
+              {
+                "name": "Approved Use Case Catalog",
+                "description": "Defines approved and prohibited AI engineering use cases.",
+                "children": []
+              },
+              {
+                "name": "AI Risk Controls and Policy Mapping",
+                "description": "Maps AI tool usage to security, privacy, compliance, and IP controls.",
+                "children": []
+              },
+              {
+                "name": "Tool Evaluation and Approval Workflow",
+                "description": "Evaluates and approves AI tools and models for engineering use.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "AI-Assisted Requirements and Design Support",
+            "description": "Uses AI to accelerate requirement drafting, design exploration, and specification quality.",
+            "children": []
+          },
+          {
+            "name": "AI-Assisted Coding and Refactoring",
+            "description": "Uses coding assistants and agents to generate, transform, and improve code safely.",
+            "children": [
+              {
+                "name": "Prompt and Spec Patterns for Coding",
+                "description": "Defines effective prompting/specification patterns for coding assistants and agents.",
+                "children": []
+              },
+              {
+                "name": "Human-in-the-Loop Review for AI Changes",
+                "description": "Applies review and validation controls for AI-generated code changes.",
+                "children": []
+              },
+              {
+                "name": "AI Refactoring and Modernization Workflows",
+                "description": "Uses AI to accelerate safe refactoring and legacy modernization.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "AI-Assisted Testing and Quality Support",
+            "description": "Uses AI to generate tests, identify edge cases, and support defect triage.",
+            "children": []
+          },
+          {
+            "name": "AI-Assisted Code Review and Documentation",
+            "description": "Uses AI to support review summaries, documentation generation, and change explanations.",
+            "children": []
+          },
+          {
+            "name": "Agentic Workflow Orchestration in Engineering",
+            "description": "Designs and operates multi-step or multi-agent workflows for engineering tasks.",
+            "children": [
+              {
+                "name": "Task Decomposition and Planning for Agents",
+                "description": "Structures engineering tasks into agent-executable steps and checkpoints.",
+                "children": []
+              },
+              {
+                "name": "Tool Integration and Execution Control",
+                "description": "Integrates tools and controls execution permissions for engineering agents.",
+                "children": []
+              },
+              {
+                "name": "Agent Output Verification and Recovery Loops",
+                "description": "Verifies agent outputs and applies retries or fallback workflows.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Evaluation and Benchmarking of Engineering AI Assistants",
+            "description": "Evaluates AI assistant performance, safety, and usefulness in engineering contexts.",
+            "children": [
+              {
+                "name": "Task Suite and Scenario Design",
+                "description": "Designs representative engineering tasks for evaluating assistant performance.",
+                "children": []
+              },
+              {
+                "name": "Quality, Safety, and Reliability Evaluation",
+                "description": "Measures correctness, safety, and reliability of assistant outputs.",
+                "children": []
+              },
+              {
+                "name": "Adoption Readiness and Rollout Criteria",
+                "description": "Defines rollout criteria based on evaluation evidence and risks.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "AI Adoption Enablement and Productivity Measurement",
+            "description": "Enables engineering teams to adopt AI tools and measures impact responsibly.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Open Source and Third-Party Software Management",
+        "description": "Manages software dependencies, open-source use, licenses, and third-party engineering risk within delivery workflows.",
+        "children": [
+          {
+            "name": "Open Source Consumption Governance",
+            "description": "Defines approved usage patterns, repositories, and controls for open-source software consumption.",
+            "children": [
+              {
+                "name": "Approved Source and Repository Controls",
+                "description": "Defines trusted package sources and repository usage controls.",
+                "children": []
+              },
+              {
+                "name": "Open Source Intake Review",
+                "description": "Reviews new OSS components for suitability and risk before adoption.",
+                "children": []
+              },
+              {
+                "name": "Exception and Waiver Management",
+                "description": "Manages exceptions to OSS consumption policies with documented risk acceptance.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "License Compliance and Obligation Management",
+            "description": "Identifies and manages license obligations, notices, and restrictions.",
+            "children": [
+              {
+                "name": "License Detection and Classification",
+                "description": "Identifies and classifies component licenses accurately.",
+                "children": []
+              },
+              {
+                "name": "Obligation Tracking and Notice Generation",
+                "description": "Tracks obligations and generates notices and attributions.",
+                "children": []
+              },
+              {
+                "name": "Policy Enforcement for Restricted Licenses",
+                "description": "Enforces policies for copyleft or otherwise restricted licenses.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Third-Party Component Risk Assessment",
+            "description": "Assesses operational, security, support, and legal risks of third-party components.",
+            "children": []
+          },
+          {
+            "name": "Dependency Lifecycle and Upgrade Management",
+            "description": "Plans dependency upgrades, compatibility testing, and deprecation handling.",
+            "children": []
+          },
+          {
+            "name": "Third-Party Service and SDK Integration Governance",
+            "description": "Governs integration of external services, SDKs, and APIs into products.",
+            "children": []
+          },
+          {
+            "name": "Open Source Contribution and Inner/Outer Source Policy",
+            "description": "Manages contribution approvals, contribution workflows, and upstream collaboration practices.",
+            "children": []
+          },
+          {
+            "name": "Commercial Engineering Tool Vendor Management",
+            "description": "Selects and manages engineering tooling vendors, contracts, and operational fit.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Service Lifecycle Transition and Support Readiness",
+        "description": "Ensures software services transition safely into operation with support readiness, handover quality, and lifecycle closure.",
+        "children": [
+          {
+            "name": "Operational Readiness Review",
+            "description": "Validates that services meet operational prerequisites before go-live or major changes.",
+            "children": [
+              {
+                "name": "Readiness Criteria Definition",
+                "description": "Defines go-live readiness criteria across engineering, support, and control functions.",
+                "children": []
+              },
+              {
+                "name": "Evidence Collection and Review Execution",
+                "description": "Collects readiness evidence and runs review checkpoints.",
+                "children": []
+              },
+              {
+                "name": "Go-Live Conditions and Follow-up Actions",
+                "description": "Records go-live conditions, risks, and post-launch follow-up actions.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Support Model Definition and Handover",
+            "description": "Defines support tiers, responsibilities, and handover materials between build and run teams.",
+            "children": [
+              {
+                "name": "Support Responsibility Matrix",
+                "description": "Defines support roles, responsibilities, and escalation paths.",
+                "children": []
+              },
+              {
+                "name": "Handover Artifact Preparation",
+                "description": "Prepares runbooks, architecture summaries, and known issue documentation.",
+                "children": []
+              },
+              {
+                "name": "Hypercare and Early Life Support",
+                "description": "Provides enhanced support during the early post-release period.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Service Catalog and Ownership Registration",
+            "description": "Registers services, owners, contacts, and support metadata in service inventory systems.",
+            "children": [
+              {
+                "name": "Service Metadata Standards",
+                "description": "Defines required service metadata and ownership attributes.",
+                "children": []
+              },
+              {
+                "name": "Ownership and Contact Maintenance",
+                "description": "Maintains current owner and support contact information.",
+                "children": []
+              },
+              {
+                "name": "Catalog Integration and Discovery",
+                "description": "Integrates service metadata into discovery and support workflows.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Lifecycle Maintenance and End-of-Life Planning",
+            "description": "Plans maintenance windows, version support timelines, and retirement or replacement paths.",
+            "children": []
+          },
+          {
+            "name": "Customer/Business Release Communication",
+            "description": "Communicates release impacts, known issues, and support expectations to users and stakeholders.",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+]

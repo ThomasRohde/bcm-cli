@@ -44,7 +44,11 @@ export const sortOption = new Option(
 export const rootOption = new Option(
   "--root <idOrName>",
   "Select specific root by ID or name (repeatable)",
-);
+).argParser((value: string, previous: string[] | undefined) => {
+  const list = previous ?? [];
+  list.push(value);
+  return list;
+});
 
 // Layout options
 export const gapOption = new Option("--gap <px>", "Element gap in px").default(

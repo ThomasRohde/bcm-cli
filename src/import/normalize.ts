@@ -45,6 +45,7 @@ function makeId(name: string, parentPath: string, index: number): string {
 function collectProperties(
   obj: Record<string, unknown>,
   skip: Set<string>,
+  warnings?: BcmWarning[],
 ): Record<string, string | number | boolean> {
   const props: Record<string, string | number | boolean> = {};
   for (const [key, val] of Object.entries(obj)) {
@@ -55,6 +56,12 @@ function collectProperties(
       typeof val === "boolean"
     ) {
       props[key] = val;
+    } else if (val !== null && val !== undefined && warnings) {
+      warnings.push({
+        code: "WARN_IGNORED_PROPERTY",
+        message: `Non-scalar property "${key}" ignored`,
+        details: { key, type: typeof val },
+      });
     }
   }
   return props;
@@ -75,9 +82,19 @@ export function normalizeNode(
   childrenField: string | null,
   parentPath: string,
   index: number,
+  warnings?: BcmWarning[],
 ): CapabilityNode {
   const rawName = nameField ? String(obj[nameField] ?? "") : "";
   const name = rawName.trim() || "-- unnamed --";
+
+  if (name === "-- unnamed --" && warnings) {
+    warnings.push({
+      code: "WARN_UNNAMED_ITEM",
+      message: `Item at index ${index} has no name; using "-- unnamed --"`,
+      details: { index },
+    });
+  }
+
   const description = descField
     ? (obj[descField] as string | undefined) ?? undefined
     : undefined;
@@ -91,7 +108,7 @@ export function normalizeNode(
   if (descField) skipFields.add(descField);
   if (childrenField) skipFields.add(childrenField);
 
-  const properties = collectProperties(obj, skipFields);
+  const properties = collectProperties(obj, skipFields, warnings);
 
   // Recurse into children
   const children: CapabilityNode[] = [];
@@ -108,6 +125,7 @@ export function normalizeNode(
             findChildrenField(child, childrenField ?? undefined),
             currentPath,
             i,
+            warnings,
           ),
         );
       }
@@ -158,6 +176,15 @@ export function buildTreeFromFlat(
     const obj = items[i];
     const rawName = nameField ? String(obj[nameField] ?? "") : "";
     const name = rawName.trim() || "-- unnamed --";
+
+    if (name === "-- unnamed --") {
+      warnings.push({
+        code: "WARN_UNNAMED_ITEM",
+        message: `Item at index ${i} has no name; using "-- unnamed --"`,
+        details: { index: i },
+      });
+    }
+
     const description = descField
       ? (obj[descField] as string | undefined) ?? undefined
       : undefined;
@@ -167,19 +194,19 @@ export function buildTreeFromFlat(
       ? `${slugify(originalId)}_${i}`
       : makeId(name, "", i);
 
-    // Detect duplicate original IDs
+    // Detect duplicate original IDs — fail per PRD
     if (originalId) {
       if (seenOriginalIds.has(originalId)) {
-        warnings.push({
-          code: "WARN_DUPLICATE_ORIGINAL_ID",
-          message: `Duplicate ID "${originalId}" at index ${i} for "${name}"`,
-          details: { id: originalId, index: i, name },
-        });
+        throw new BcmAppError(
+          ErrorCode.ERR_VALIDATION_DUPLICATE_ID,
+          `Duplicate ID "${originalId}" at index ${i} for "${name}"`,
+          { id: originalId, index: i, name },
+        );
       }
       seenOriginalIds.add(originalId);
     }
 
-    const properties = collectProperties(obj, skipFields);
+    const properties = collectProperties(obj, skipFields, warnings);
 
     const parentRef = parentField
       ? (obj[parentField] as string | null) ?? null
@@ -279,6 +306,7 @@ function normalizeSimple(
   items: Record<string, unknown>[],
   nameField: string | null,
   descField: string | null,
+  warnings?: BcmWarning[],
 ): CapabilityNode[] {
   const skipFields = new Set<string>();
   if (nameField) skipFields.add(nameField);
@@ -287,11 +315,20 @@ function normalizeSimple(
   return items.map((obj, i) => {
     const rawName = nameField ? String(obj[nameField] ?? "") : "";
     const name = rawName.trim() || "-- unnamed --";
+
+    if (name === "-- unnamed --" && warnings) {
+      warnings.push({
+        code: "WARN_UNNAMED_ITEM",
+        message: `Item at index ${i} has no name; using "-- unnamed --"`,
+        details: { index: i },
+      });
+    }
+
     const description = descField
       ? (obj[descField] as string | undefined) ?? undefined
       : undefined;
     const id = makeId(name, "", i);
-    const properties = collectProperties(obj, skipFields);
+    const properties = collectProperties(obj, skipFields, warnings);
 
     return { id, name, description, properties, children: [] };
   });
@@ -312,18 +349,18 @@ export function normalizeItems(
 ): { roots: CapabilityNode[]; warnings: BcmWarning[] } {
   const warnings: BcmWarning[] = [];
 
-  // Check for duplicate original IDs across all schemas
+  // Check for duplicate original IDs across all schemas — fail per PRD
   if (fields.id) {
     const seen = new Map<string, number>();
     for (let i = 0; i < items.length; i++) {
       const origId = String(items[i][fields.id] ?? "");
       if (!origId) continue;
       if (seen.has(origId)) {
-        warnings.push({
-          code: "WARN_DUPLICATE_ORIGINAL_ID",
-          message: `Duplicate ID "${origId}" at index ${i}`,
-          details: { id: origId, index: i, firstIndex: seen.get(origId) },
-        });
+        throw new BcmAppError(
+          ErrorCode.ERR_VALIDATION_DUPLICATE_ID,
+          `Duplicate ID "${origId}" at index ${i}`,
+          { id: origId, index: i, firstIndex: seen.get(origId) },
+        );
       } else {
         seen.set(origId, i);
       }
@@ -342,6 +379,7 @@ export function normalizeItems(
             fields.children,
             "",
             i,
+            warnings,
           ),
         );
       }
@@ -362,7 +400,7 @@ export function normalizeItems(
 
     case "simple": {
       return {
-        roots: normalizeSimple(items, fields.name, fields.description),
+        roots: normalizeSimple(items, fields.name, fields.description, warnings),
         warnings,
       };
     }
@@ -370,7 +408,7 @@ export function normalizeItems(
     default: {
       // Should not happen — but treat as simple
       return {
-        roots: normalizeSimple(items, fields.name, fields.description),
+        roots: normalizeSimple(items, fields.name, fields.description, warnings),
         warnings,
       };
     }

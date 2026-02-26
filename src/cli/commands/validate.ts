@@ -2,7 +2,7 @@ import type { Envelope, ValidateResult, ImportOptions } from "../../core/types.j
 import { successEnvelope, errorEnvelope } from "../envelope.js";
 import { BcmAppError } from "../errors.js";
 import { readInput } from "../../import/reader.js";
-import { importJson } from "../../import/index.js";
+import { importJson, filterRoots } from "../../import/index.js";
 
 export function runValidate(
   inputPath: string | undefined,
@@ -11,8 +11,16 @@ export function runValidate(
 ): { envelope: Envelope<ValidateResult | null>; exitCode: number } {
   const start = Date.now();
   try {
-    const raw = readInput(inputPath);
+    const raw = readInput(importOpts.stdin ? undefined : inputPath);
     const result = importJson(raw, importOpts);
+
+    // --- Root filtering ---
+    if (importOpts.root && importOpts.root.length > 0) {
+      const { filtered, warnings: rootWarnings } = filterRoots(result.roots, importOpts.root);
+      result.warnings.push(...rootWarnings);
+      result.roots.length = 0;
+      result.roots.push(...filtered);
+    }
     const duration_ms = Date.now() - start;
 
     // Check if import produced validation errors in warnings

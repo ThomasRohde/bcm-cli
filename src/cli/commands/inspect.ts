@@ -2,7 +2,7 @@ import type { Envelope, InspectResult, ImportOptions } from "../../core/types.js
 import { successEnvelope, errorEnvelope } from "../envelope.js";
 import { BcmAppError } from "../errors.js";
 import { readInput } from "../../import/reader.js";
-import { importJson } from "../../import/index.js";
+import { importJson, filterRoots } from "../../import/index.js";
 
 export function runInspect(
   inputPath: string | undefined,
@@ -11,8 +11,16 @@ export function runInspect(
 ): { envelope: Envelope<InspectResult | null>; exitCode: number } {
   const start = Date.now();
   try {
-    const raw = readInput(inputPath);
+    const raw = readInput(importOpts.stdin ? undefined : inputPath);
     const result = importJson(raw, importOpts);
+
+    // --- Root filtering ---
+    if (importOpts.root && importOpts.root.length > 0) {
+      const { filtered, warnings: rootWarnings } = filterRoots(result.roots, importOpts.root);
+      result.warnings.push(...rootWarnings);
+      result.roots.length = 0;
+      result.roots.push(...filtered);
+    }
     const duration_ms = Date.now() - start;
 
     return {

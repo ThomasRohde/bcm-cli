@@ -81,6 +81,41 @@ function computeSummary(roots: CapabilityNode[]): ModelSummary {
 }
 
 // ---------------------------------------------------------------------------
+// Root filtering
+// ---------------------------------------------------------------------------
+
+export function filterRoots(
+  roots: CapabilityNode[],
+  selectors: string[],
+): { filtered: CapabilityNode[]; warnings: BcmWarning[] } {
+  const warnings: BcmWarning[] = [];
+  const matched: CapabilityNode[] = [];
+  const matchedSelectors = new Set<string>();
+
+  for (const root of roots) {
+    for (const sel of selectors) {
+      if (root.name === sel || root.id === sel) {
+        matched.push(root);
+        matchedSelectors.add(sel);
+        break;
+      }
+    }
+  }
+
+  for (const sel of selectors) {
+    if (!matchedSelectors.has(sel)) {
+      warnings.push({
+        code: "WARN_ROOT_NOT_FOUND",
+        message: `Root selector "${sel}" did not match any root node`,
+        details: { selector: sel },
+      });
+    }
+  }
+
+  return { filtered: matched, warnings };
+}
+
+// ---------------------------------------------------------------------------
 // Main pipeline
 // ---------------------------------------------------------------------------
 
@@ -137,6 +172,15 @@ export function importJson(
     parent: findParentField(sample, importOptions.parentField),
     id: findIdField(sample, importOptions.idField),
   };
+
+  // 4b. Fail if no name field detected
+  if (fields.name === null) {
+    throw new BcmAppError(
+      ErrorCode.ERR_VALIDATION_NO_NAME_FIELD,
+      "No name field detected in input data",
+      { sampleKeys: Object.keys(sample) },
+    );
+  }
 
   // 5. Normalize
   const { roots, warnings: normalizeWarnings } = normalizeItems(

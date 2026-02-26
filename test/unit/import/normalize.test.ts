@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { normalizeItems, buildTreeFromFlat } from "../../../src/import/normalize.js";
+import { importJson } from "../../../src/import/index.js";
 import { ErrorCode } from "../../../src/cli/errors.js";
 
 describe("normalizeItems", () => {
@@ -72,27 +73,51 @@ describe("normalizeItems", () => {
     ).toThrow("Cycle detected");
   });
 
-  it("warns on duplicate original IDs in simple schema", () => {
+  it("throws on duplicate original IDs in simple schema", () => {
     const items = [
       { id: "1", name: "First" },
       { id: "1", name: "Duplicate" },
       { id: "2", name: "Second" },
     ];
-    const { roots, warnings } = normalizeItems(items as any, "simple", {
-      name: "name", description: null, children: null, parent: null, id: "id",
-    });
-    expect(roots).toHaveLength(3);
-    expect(warnings.some((w) => w.code === "WARN_DUPLICATE_ORIGINAL_ID")).toBe(true);
+    expect(() =>
+      normalizeItems(items as any, "simple", {
+        name: "name", description: null, children: null, parent: null, id: "id",
+      }),
+    ).toThrow("Duplicate ID");
   });
 
-  it("warns on duplicate original IDs in flat schema", () => {
+  it("throws on duplicate original IDs in flat schema", () => {
     const items = [
       { id: "1", name: "Root", parent_id: null },
       { id: "1", name: "Dup", parent_id: null },
     ];
+    expect(() =>
+      normalizeItems(items as any, "flat", {
+        name: "name", description: null, children: null, parent: "parent_id", id: "id",
+      }),
+    ).toThrow("Duplicate ID");
+  });
+
+  it("importJson throws for no-string-field objects", () => {
+    const raw = JSON.stringify([{ count: 1, active: true }]);
+    expect(() => importJson(raw)).toThrow("No name field detected");
+  });
+
+  it("warns on unnamed items in simple schema", () => {
+    const items = [{ name: "" }, { name: "Valid" }];
+    const { warnings } = normalizeItems(items as any, "simple", {
+      name: "name", description: null, children: null, parent: null, id: null,
+    });
+    expect(warnings.some((w) => w.code === "WARN_UNNAMED_ITEM")).toBe(true);
+  });
+
+  it("warns on unnamed items in flat schema", () => {
+    const items = [
+      { id: "1", name: "", parent_id: null },
+    ];
     const { warnings } = normalizeItems(items as any, "flat", {
       name: "name", description: null, children: null, parent: "parent_id", id: "id",
     });
-    expect(warnings.some((w) => w.code === "WARN_DUPLICATE_ORIGINAL_ID")).toBe(true);
+    expect(warnings.some((w) => w.code === "WARN_UNNAMED_ITEM")).toBe(true);
   });
 });

@@ -136,6 +136,14 @@ export interface ImportOptions {
   idField?: string;
   unwrap?: string;
   stdin?: boolean;
+  root?: string[];
+}
+
+export interface FlagMeta {
+  type: string;
+  default?: string | number | boolean;
+  choices?: string[];
+  description: string;
 }
 
 export interface ExportOptions {

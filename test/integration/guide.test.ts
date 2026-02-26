@@ -39,4 +39,24 @@ describe("guide command", () => {
     const result = envelope.result as any;
     expect(result.schema_version).toBe("1.0");
   });
+
+  it("contains examples array", () => {
+    const { envelope } = runGuide(generateRequestId());
+    const result = envelope.result as any;
+    expect(result.examples).toBeDefined();
+    expect(result.examples.length).toBeGreaterThanOrEqual(6);
+    expect(result.examples[0]).toHaveProperty("command");
+    expect(result.examples[0]).toHaveProperty("description");
+  });
+
+  it("has typed flag metadata on commands", () => {
+    const { envelope } = runGuide(generateRequestId());
+    const result = envelope.result as any;
+    const renderFlags = result.commands["bcm.render"].flags;
+    expect(renderFlags["--outDir"]).toHaveProperty("type", "string");
+    expect(renderFlags["--outDir"]).toHaveProperty("default", ".");
+    expect(renderFlags["--outDir"]).toHaveProperty("description");
+    expect(renderFlags["--svg"]).toHaveProperty("type", "boolean");
+    expect(renderFlags["--sort"]).toHaveProperty("choices");
+  });
 });
