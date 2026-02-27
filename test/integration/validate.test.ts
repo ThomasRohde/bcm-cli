@@ -33,6 +33,17 @@ describe("validate command", () => {
     );
   });
 
+  it("filters flat schema roots by source ID", () => {
+    const filtered = runValidate(
+      join(fixturesDir, "flat-by-id.json"),
+      { root: ["1"] },
+      generateRequestId(),
+    );
+    expect(filtered.envelope.ok).toBe(true);
+    expect(filtered.envelope.result?.model_summary.roots).toBe(1);
+    expect(filtered.envelope.result?.model_summary.nodes).toBe(4);
+  });
+
   it("returns error for missing file", () => {
     const { exitCode } = runValidate(join(fixturesDir, "nonexistent.json"), {}, generateRequestId());
     expect(exitCode).toBe(50);

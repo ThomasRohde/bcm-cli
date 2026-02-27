@@ -38,6 +38,12 @@ function makeId(name: string, parentPath: string, index: number): string {
   return `${base}_${index}`;
 }
 
+function normalizeRef(value: unknown): string | null {
+  if (value === null || value === undefined) return null;
+  const normalized = String(value).trim();
+  return normalized.length > 0 ? normalized : null;
+}
+
 /**
  * Collect extra scalar fields into a properties bag, skipping the known
  * structural fields.
@@ -205,10 +211,8 @@ export function buildTreeFromFlat(
       ? (obj[descField] as string | undefined) ?? undefined
       : undefined;
 
-    const originalId = idField ? String(obj[idField] ?? "") : "";
-    const id = originalId
-      ? `${slugify(originalId)}_${i}`
-      : makeId(name, "", i);
+    const originalId = idField ? (normalizeRef(obj[idField]) ?? "") : "";
+    const id = originalId || makeId(name, "", i);
 
     // Detect duplicate original IDs — fail per PRD
     if (originalId) {
@@ -225,7 +229,7 @@ export function buildTreeFromFlat(
     const properties = collectProperties(obj, skipFields, warnings);
 
     const parentRef = parentField
-      ? (obj[parentField] as string | null) ?? null
+      ? normalizeRef(obj[parentField])
       : null;
 
     const node: CapabilityNode = {
@@ -249,7 +253,7 @@ export function buildTreeFromFlat(
   const parentIdxMap = new Map<number, number>();
   for (let i = 0; i < entries.length; i++) {
     const ref = entries[i].parentRef;
-    if (ref && ref.trim() !== "") {
+    if (ref) {
       const pi = refMap.get(ref);
       if (pi !== undefined) {
         parentIdxMap.set(i, pi);
@@ -289,7 +293,7 @@ export function buildTreeFromFlat(
   const roots: CapabilityNode[] = [];
 
   for (const entry of entries) {
-    if (!entry.parentRef || entry.parentRef.trim() === "") {
+    if (!entry.parentRef) {
       roots.push(entry.node);
       continue;
     }

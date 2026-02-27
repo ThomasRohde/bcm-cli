@@ -28,6 +28,32 @@ describe("normalizeItems", () => {
     expect(roots[0].children).toHaveLength(1);
   });
 
+  it("preserves source IDs for flat schema", () => {
+    const items = [
+      { id: "1", name: "Parent", parent_id: null },
+      { id: "2", name: "Child", parent_id: "1" },
+    ];
+    const { roots } = normalizeItems(items as any, "flat", {
+      name: "name", description: null, children: null, parent: "parent_id", id: "id",
+    });
+    expect(roots[0].id).toBe("1");
+    expect(roots[0].children[0].id).toBe("2");
+  });
+
+  it("supports numeric parent references in flat schema", () => {
+    const items = [
+      { id: 1, name: "Parent", parent_id: null },
+      { id: 2, name: "Child", parent_id: 1 },
+    ];
+    const { roots } = normalizeItems(items as any, "flat", {
+      name: "name", description: null, children: null, parent: "parent_id", id: "id",
+    });
+    expect(roots).toHaveLength(1);
+    expect(roots[0].id).toBe("1");
+    expect(roots[0].children).toHaveLength(1);
+    expect(roots[0].children[0].id).toBe("2");
+  });
+
   it("normalizes simple schema", () => {
     const items = [{ name: "A" }, { name: "B" }];
     const { roots } = normalizeItems(items as any, "simple", {

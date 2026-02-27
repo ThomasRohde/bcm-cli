@@ -38,6 +38,17 @@ describe("inspect command", () => {
     );
   });
 
+  it("filters flat schema roots by source ID", () => {
+    const filtered = runInspect(
+      join(fixturesDir, "flat-by-id.json"),
+      { root: ["1"] },
+      generateRequestId(),
+    );
+    expect(filtered.envelope.ok).toBe(true);
+    expect(filtered.envelope.result?.model_summary.roots).toBe(1);
+    expect(filtered.envelope.result?.model_summary.nodes).toBe(4);
+  });
+
   it("handles wrapped object", () => {
     const { envelope } = runInspect(join(fixturesDir, "wrapped-object.json"), {}, generateRequestId());
     expect(envelope.ok).toBe(true);

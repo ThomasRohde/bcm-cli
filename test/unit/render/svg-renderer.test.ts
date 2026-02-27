@@ -66,4 +66,22 @@ describe("svg-renderer", () => {
     expect(svg).toContain("<tspan");
     expect(svg).toContain("This child");
   });
+
+  it("uses truncated single-line text when only one line fits", () => {
+    const longName = "This is an extremely long capability label that should be truncated";
+    const roots: CapabilityNode[] = [{
+      id: "r",
+      name: longName,
+      properties: {},
+      children: [],
+    }];
+    const layout = layoutTrees(roots, opts, stubMeasure);
+    const theme = structuredClone(DEFAULT_THEME);
+    theme.typography.leafFont.size = 32; // one line for default leaf height
+
+    const svg = renderSvg(layout, theme);
+
+    expect(svg).toContain("...");
+    expect(svg).not.toContain(`>${longName}</text>`);
+  });
 });

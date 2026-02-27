@@ -2,6 +2,8 @@ import type { SchemaType } from "../core/types.js";
 import { findChildrenField } from "./fields.js";
 import { findParentField } from "./fields.js";
 
+const SCHEMA_SAMPLE_SIZE = 5;
+
 /**
  * Detect whether the data uses a nested, flat, or simple schema.
  *
@@ -16,20 +18,24 @@ export function detectSchema(
 ): SchemaType | null {
   if (items.length === 0) return null;
 
-  const sample = items[0];
-  if (typeof sample !== "object" || sample === null) return null;
+  const checkCount = Math.min(items.length, SCHEMA_SAMPLE_SIZE);
+  let sawObject = false;
 
-  // Check for nested: does the sample have a children-like field?
-  if (findChildrenField(sample) !== null) {
-    return "nested";
+  // Check for nested in the sampled items.
+  for (let i = 0; i < checkCount; i++) {
+    const sample = items[i];
+    if (typeof sample !== "object" || sample === null) continue;
+    sawObject = true;
+    if (findChildrenField(sample) !== null) return "nested";
   }
 
-  // Check for flat: do any of the first 5 items have a parent-like field?
-  const checkCount = Math.min(items.length, 5);
+  if (!sawObject) return null;
+
+  // Check for flat in the sampled items.
   for (let i = 0; i < checkCount; i++) {
-    if (findParentField(items[i]) !== null) {
-      return "flat";
-    }
+    const sample = items[i];
+    if (typeof sample !== "object" || sample === null) continue;
+    if (findParentField(sample) !== null) return "flat";
   }
 
   return "simple";

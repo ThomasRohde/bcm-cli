@@ -7,31 +7,39 @@ export function createStubMeasurer(charWidth: number = 7): MeasureTextFn {
   };
 }
 
-let cachedMeasurer: MeasureTextFn | null = null;
+const cachedMeasurers = new Map<string, MeasureTextFn>();
+
+function cacheKey(fontPath: string, fontSize: number): string {
+  return `${fontPath}::${fontSize}`;
+}
 
 /** Reset the font measurer cache (for testing). */
 export function resetFontCache(): void {
-  cachedMeasurer = null;
+  cachedMeasurers.clear();
 }
 
 export async function createFontMeasurer(
   fontPath: string,
   fontSize: number,
 ): Promise<MeasureTextFn> {
-  if (cachedMeasurer) return cachedMeasurer;
+  const key = cacheKey(fontPath, fontSize);
+  const cached = cachedMeasurers.get(key);
+  if (cached) return cached;
 
   try {
     const opentype = await import("opentype.js");
     const font = await opentype.load(fontPath);
 
-    cachedMeasurer = (text: string): number => {
+    const measurer: MeasureTextFn = (text: string): number => {
       if (!text || !text.trim()) return 40;
       return font.getAdvanceWidth(text, fontSize);
     };
-    return cachedMeasurer;
+    cachedMeasurers.set(key, measurer);
+    return measurer;
   } catch {
     // Fallback to stub measurer if font loading fails
-    cachedMeasurer = createStubMeasurer();
-    return cachedMeasurer;
+    const measurer = createStubMeasurer();
+    cachedMeasurers.set(key, measurer);
+    return measurer;
   }
 }

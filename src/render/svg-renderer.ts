@@ -174,7 +174,7 @@ export function renderSvg(layout: LayoutResult, theme: ThemeConfig): string {
     if (labelLines.length > 1) {
       svg.textLines(labelLines, textAttrs, lineHeight);
     } else {
-      svg.text(node.name, textAttrs);
+      svg.text(labelLines[0] ?? "", textAttrs);
     }
 
     // Recurse children (depth-first)

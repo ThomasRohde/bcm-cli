@@ -5,6 +5,12 @@ describe("detectSchema", () => {
   it("detects nested schema", () => {
     expect(detectSchema([{ name: "A", children: [{ name: "B" }] }])).toBe("nested");
   });
+  it("detects nested schema when a later sampled item has children", () => {
+    expect(detectSchema([
+      { name: "Leaf" },
+      { name: "Parent", children: [{ name: "Child" }] },
+    ] as any)).toBe("nested");
+  });
   it("detects flat schema", () => {
     expect(detectSchema([
       { name: "A", parent: null },

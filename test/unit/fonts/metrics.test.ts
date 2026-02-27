@@ -48,5 +48,15 @@ describe("font metrics", () => {
       const wideWidth = measure("WWWW");  // wide characters
       expect(wideWidth).toBeGreaterThan(narrowWidth);
     });
+
+    it("caches by font path and size", async () => {
+      if (!existsSync(fontPath)) return; // skip if font not present
+      const measure12 = await createFontMeasurer(fontPath, 12);
+      const measure12Again = await createFontMeasurer(fontPath, 12);
+      const measure24 = await createFontMeasurer(fontPath, 24);
+
+      expect(measure12Again).toBe(measure12);
+      expect(measure24("Capability")).toBeGreaterThan(measure12("Capability"));
+    });
   });
 });

@@ -18,6 +18,14 @@ describe("guide command", () => {
     expect(result.commands).toHaveProperty("bcm.guide");
   });
 
+  it("marks input args as optional to support --stdin workflows", () => {
+    const { envelope } = runGuide(generateRequestId());
+    const result = envelope.result as any;
+    expect(result.commands["bcm.render"].args).toEqual(["[input.json]"]);
+    expect(result.commands["bcm.validate"].args).toEqual(["[input.json]"]);
+    expect(result.commands["bcm.inspect"].args).toEqual(["[input.json]"]);
+  });
+
   it("contains error codes", () => {
     const { envelope } = runGuide(generateRequestId());
     const result = envelope.result as any;
@@ -71,6 +79,7 @@ describe("guide command", () => {
     expect(schemas.flat.example).toBeInstanceOf(Array);
     expect(schemas.simple).toBeDefined();
     expect(schemas.simple.example).toBeInstanceOf(Array);
+    expect(schemas.simple.description).not.toContain("single root");
 
     // wrapper_support
     expect(result.input_schemas.wrapper_support).toContain("--unwrap");

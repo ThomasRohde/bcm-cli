@@ -113,6 +113,20 @@ describe("render command", () => {
     );
   });
 
+  it("filters flat schema roots by source ID", async () => {
+    const { envelope } = await runRender(
+      join(fixturesDir, "flat-by-id.json"),
+      { root: ["1"] },
+      DEFAULT_LAYOUT_OPTIONS,
+      { outDir: tmpDir, svg: true, html: false, png: false, pdf: false, scale: 2, pageSize: "A4", pdfMargin: "10mm", dryRun: true },
+      undefined, undefined, undefined,
+      generateRequestId(),
+    );
+    expect(envelope.ok).toBe(true);
+    expect(envelope.result?.model_summary.roots).toBe(1);
+    expect(envelope.result?.model_summary.nodes).toBe(4);
+  });
+
   it("returns validation error for invalid numeric options", async () => {
     const { envelope, exitCode } = await runRender(
       join(fixturesDir, "nested-simple.json"),

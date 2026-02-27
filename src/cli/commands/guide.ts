@@ -39,7 +39,7 @@ export function runGuide(requestId: string): { envelope: Envelope<unknown>; exit
     commands: {
       "bcm.render": {
         description: "Full pipeline: import → layout → render → export",
-        args: ["<input.json>"],
+        args: ["[input.json]"],
         mutates: true,
         flags: {
           ...IMPORT_FLAGS,
@@ -73,13 +73,13 @@ export function runGuide(requestId: string): { envelope: Envelope<unknown>; exit
       },
       "bcm.validate": {
         description: "Import + validate; report issues; no artefacts",
-        args: ["<input.json>"],
+        args: ["[input.json]"],
         mutates: false,
         flags: { ...IMPORT_FLAGS, ...DIAGNOSTIC_FLAGS },
       },
       "bcm.inspect": {
         description: "Detect schema fields and produce a structured summary",
-        args: ["<input.json>"],
+        args: ["[input.json]"],
         mutates: false,
         flags: { ...IMPORT_FLAGS, ...DIAGNOSTIC_FLAGS },
       },
@@ -133,7 +133,7 @@ export function runGuide(requestId: string): { envelope: Envelope<unknown>; exit
           ],
         },
         simple: {
-          description: "Plain array of items rendered as flat leaf nodes under a single root",
+          description: "Plain array of items rendered as flat leaf nodes",
           detection: "No children or parent fields detected",
           example: [
             { name: "Onboarding" },
