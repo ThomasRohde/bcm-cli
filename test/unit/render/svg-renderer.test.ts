@@ -47,4 +47,23 @@ describe("svg-renderer", () => {
     expect(svg).toContain(DEFAULT_THEME.palette.depthFills[0]); // root color
     expect(svg).toContain(DEFAULT_THEME.palette.leafFill); // leaf color
   });
+
+  it("wraps long labels into multiple lines when they exceed node width", () => {
+    const roots: CapabilityNode[] = [{
+      id: "r",
+      name: "This root label is intentionally long and should wrap in the header area",
+      properties: {},
+      children: [{
+        id: "c",
+        name: "This child capability label is also intentionally long to force wrapping",
+        children: [],
+        properties: {},
+      }],
+    }];
+    const layout = layoutTrees(roots, opts, stubMeasure);
+    const svg = renderSvg(layout, DEFAULT_THEME);
+
+    expect(svg).toContain("<tspan");
+    expect(svg).toContain("This child");
+  });
 });

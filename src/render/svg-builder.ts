@@ -13,6 +13,10 @@ function attrs(attributes: Record<string, string | number>): string {
     .join(" ");
 }
 
+function attrValue(value: string | number): string {
+  return typeof value === "string" ? escapeXml(value) : String(value);
+}
+
 export class SvgBuilder {
   private elements: string[] = [];
 
@@ -23,6 +27,29 @@ export class SvgBuilder {
 
   text(content: string, attributes: Record<string, string | number>): this {
     this.elements.push(`  <text ${attrs(attributes)}>${escapeXml(content)}</text>`);
+    return this;
+  }
+
+  textLines(
+    lines: string[],
+    attributes: Record<string, string | number>,
+    lineHeight: number,
+  ): this {
+    if (lines.length <= 1) {
+      return this.text(lines[0] ?? "", attributes);
+    }
+
+    const textAttrs = attrs(attributes);
+    const x = attributes.x;
+    const xAttr = x === undefined ? "" : ` x="${attrValue(x)}"`;
+    const firstDy = -((lines.length - 1) * lineHeight) / 2;
+
+    this.elements.push(`  <text ${textAttrs}>`);
+    for (let i = 0; i < lines.length; i++) {
+      const dyAttr = i === 0 ? ` dy="${firstDy}"` : ` dy="${lineHeight}"`;
+      this.elements.push(`    <tspan${xAttr}${dyAttr}>${escapeXml(lines[i])}</tspan>`);
+    }
+    this.elements.push("  </text>");
     return this;
   }
 

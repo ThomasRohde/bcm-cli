@@ -14,6 +14,15 @@ describe("SvgBuilder", () => {
     expect(svg).toContain("A &amp; B &lt;C&gt;");
   });
 
+  it("renders multiline text with tspans", () => {
+    const svg = new SvgBuilder()
+      .textLines(["First", "Second"], { x: 50, y: 50, "text-anchor": "middle" }, 12)
+      .toString(100, 100);
+    expect(svg).toContain("<tspan");
+    expect(svg).toContain(">First</tspan>");
+    expect(svg).toContain(">Second</tspan>");
+  });
+
   it("sets SVG dimensions in toString output", () => {
     const svg = new SvgBuilder().toString(500, 300);
     expect(svg).toContain('width="500"');
