@@ -49,6 +49,57 @@ describe("render command", () => {
     expect(existsSync(join(tmpDir, "nested-deep.html"))).toBe(true);
   });
 
+  it("embeds interactive explorer controls in HTML output", async () => {
+    const { envelope } = await runRender(
+      join(fixturesDir, "nested-simple.json"),
+      {},
+      DEFAULT_LAYOUT_OPTIONS,
+      { outDir: tmpDir, svg: false, html: true, png: false, pdf: false, scale: 2, pageSize: "A4", pdfMargin: "10mm", dryRun: false },
+      undefined, undefined, undefined,
+      generateRequestId(),
+    );
+    expect(envelope.ok).toBe(true);
+
+    const html = readFileSync(join(tmpDir, "nested-simple.html"), "utf-8");
+    expect(html).toContain('id="bcm-search-input"');
+    expect(html).toContain('id="bcm-results-list"');
+    expect(html).toContain('id="bcm-tooltip"');
+    expect(html).toContain('id="bcm-node-data"');
+    expect(html).toContain('class="bcm-node');
+  });
+
+  it("renders markdown descriptions to sanitized tooltip payload", async () => {
+    const { envelope } = await runRender(
+      join(fixturesDir, "markdown-descriptions.json"),
+      {},
+      DEFAULT_LAYOUT_OPTIONS,
+      { outDir: tmpDir, svg: false, html: true, png: false, pdf: false, scale: 2, pageSize: "A4", pdfMargin: "10mm", dryRun: false },
+      undefined, undefined, undefined,
+      generateRequestId(),
+    );
+    expect(envelope.ok).toBe(true);
+
+    const html = readFileSync(join(tmpDir, "markdown-descriptions.html"), "utf-8");
+    const match = html.match(
+      /<script id="bcm-node-data" type="application\/json">([\s\S]*?)<\/script>/,
+    );
+    expect(match).not.toBeNull();
+
+    const payload = JSON.parse(match?.[1] ?? "[]") as Array<{
+      name: string;
+      descriptionHtml: string;
+    }>;
+    const root = payload.find((entry) => entry.name === "Root Capability");
+    const child = payload.find((entry) => entry.name === "Child Capability");
+    expect(root).toBeDefined();
+    expect(child).toBeDefined();
+    expect(root?.descriptionHtml).toContain("<strong>bold</strong>");
+    expect(root?.descriptionHtml).toContain("<ul>");
+    expect(child?.descriptionHtml).toContain('href="https://example.com/docs"');
+    expect(root?.descriptionHtml).not.toContain("<script");
+    expect(root?.descriptionHtml).not.toContain("alert(");
+  });
+
   it("dry-run writes no files", async () => {
     const { envelope } = await runRender(
       join(fixturesDir, "nested-simple.json"),

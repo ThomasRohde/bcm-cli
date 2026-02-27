@@ -130,6 +130,18 @@ export function renderSvg(layout: LayoutResult, theme: ThemeConfig): string {
           Math.min(node.depth, theme.palette.depthFills.length - 1)
         ];
 
+    svg.openGroup({
+      class: `bcm-node ${node._effectiveLeaf ? "bcm-node--leaf" : "bcm-node--parent"}`,
+      "data-node-id": node.id,
+      "data-node-name": node.name,
+      "data-node-depth": node.depth,
+      "data-node-leaf": node._effectiveLeaf ? "true" : "false",
+      "data-node-x": node.position.x,
+      "data-node-y": node.position.y,
+      "data-node-w": node.size.w,
+      "data-node-h": node.size.h,
+    });
+
     svg.rect({
       x: node.position.x,
       y: node.position.y,
@@ -176,6 +188,8 @@ export function renderSvg(layout: LayoutResult, theme: ThemeConfig): string {
     } else {
       svg.text(labelLines[0] ?? "", textAttrs);
     }
+
+    svg.closeGroup();
 
     // Recurse children (depth-first)
     for (const child of node.children) {

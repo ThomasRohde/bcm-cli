@@ -1,5 +1,18 @@
 import { BcmAppError, ErrorCode } from "../cli/errors.js";
 
+function injectExportModeClass(html: string): string {
+  return html.replace(/<html([^>]*)>/i, (_full, attrs: string) => {
+    if (/class\s*=/.test(attrs)) {
+      return `<html${attrs.replace(
+        /class=(["'])(.*?)\1/i,
+        (_classFull, quote: string, value: string) =>
+          `class=${quote}${value} bcm-export${quote}`,
+      )}>`;
+    }
+    return `<html${attrs} class="bcm-export">`;
+  });
+}
+
 export async function exportPng(
   html: string,
   outPath: string,
@@ -20,10 +33,10 @@ export async function exportPng(
   let browser;
   try {
     browser = await pw.chromium.launch();
+    const htmlForExport = injectExportModeClass(html);
     // Use deviceScaleFactor for DPI scaling instead of enlarging the viewport.
-    // Viewport matches content + body padding (20px each side) so min-height:100vh
-    // doesn't add whitespace.
-    const padding = 40; // 20px body padding × 2
+    // Export mode strips explorer chrome and padding, so viewport can match map size.
+    const padding = 0;
     const page = await browser.newPage({
       deviceScaleFactor: scale,
       viewport: {
@@ -31,7 +44,7 @@ export async function exportPng(
         height: Math.ceil(height + padding),
       },
     });
-    await page.setContent(html, { waitUntil: "networkidle" });
+    await page.setContent(htmlForExport, { waitUntil: "networkidle" });
     await page.screenshot({ path: outPath, fullPage: true });
   } catch (err: any) {
     if (err instanceof BcmAppError) throw err;
@@ -77,7 +90,7 @@ export async function exportPdf(
     const page = await browser.newPage();
 
     // Scale-to-fit: if content exceeds page, inject CSS transform
-    let htmlToUse = html;
+    let htmlToUse = injectExportModeClass(html);
     if (contentWidth && contentHeight) {
       const pageDims = parsePageSize(pageSize);
       // Account for margins (parse mm values, approximate 1mm ≈ 3.78px)

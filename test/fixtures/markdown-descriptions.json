@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Root Capability",
+    "description": "Intro **bold** capability text.\n\n- Item one\n- Item two\n\n<script>alert('xss')</script>",
+    "children": [
+      {
+        "name": "Child Capability",
+        "description": "Use [docs](https://example.com/docs) for details."
+      }
+    ]
+  }
+]

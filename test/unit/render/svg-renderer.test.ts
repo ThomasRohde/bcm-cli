@@ -24,6 +24,9 @@ describe("svg-renderer", () => {
     expect(svg).toContain("</svg>");
     expect(svg).toContain("<rect");
     expect(svg).toContain("<text");
+    expect(svg).toContain('<g class="bcm-node');
+    expect(svg).toContain('data-node-id="r"');
+    expect(svg).toContain('data-node-id="c"');
   });
 
   it("contains node names as text", () => {
