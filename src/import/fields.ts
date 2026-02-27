@@ -22,6 +22,12 @@ function firstMatchingKey(
   return null;
 }
 
+function isArrayOfObjects(value: unknown, allowEmpty: boolean): boolean {
+  if (!Array.isArray(value)) return false;
+  if (value.length === 0) return allowEmpty;
+  return value.every((item) => typeof item === "object" && item !== null);
+}
+
 // ---------------------------------------------------------------------------
 // Name field
 // ---------------------------------------------------------------------------
@@ -105,19 +111,16 @@ export function findChildrenField(
   override?: string,
 ): string | null {
   if (override) return override;
-
-  const match = firstMatchingKey(obj, CHILDREN_CANDIDATES);
-  if (match) return match;
+  for (const candidate of CHILDREN_CANDIDATES) {
+    if (hasKey(obj, candidate) && isArrayOfObjects(obj[candidate], true)) {
+      return candidate;
+    }
+  }
 
   // Fallback: first field whose value is an array of objects
   for (const key of Object.keys(obj)) {
     const val = obj[key];
-    if (
-      Array.isArray(val) &&
-      val.length > 0 &&
-      typeof val[0] === "object" &&
-      val[0] !== null
-    ) {
+    if (isArrayOfObjects(val, false)) {
       return key;
     }
   }

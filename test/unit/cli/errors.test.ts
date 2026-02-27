@@ -6,6 +6,7 @@ describe("errors", () => {
     expect(exitCodeForError(ErrorCode.ERR_VALIDATION_JSON_PARSE)).toBe(10);
     expect(exitCodeForError(ErrorCode.ERR_VALIDATION_CYCLE)).toBe(10);
     expect(exitCodeForError(ErrorCode.ERR_VALIDATION_DUPLICATE_ID)).toBe(10);
+    expect(exitCodeForError(ErrorCode.ERR_VALIDATION_OPTION)).toBe(10);
   });
 
   it("maps I/O errors to exit code 50", () => {

@@ -44,6 +44,9 @@ describe("findChildrenField", () => {
   it("falls back to first array-of-objects field", () => {
     expect(findChildrenField({ name: "a", myItems: [{ n: 1 }] })).toBe("myItems");
   });
+  it("ignores children-like keys when value is not an array", () => {
+    expect(findChildrenField({ name: "a", children: 0 })).toBeNull();
+  });
   it("returns null for no arrays", () => {
     expect(findChildrenField({ name: "a" })).toBeNull();
   });

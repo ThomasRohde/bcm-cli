@@ -98,6 +98,24 @@ describe("normalizeItems", () => {
     ).toThrow("Duplicate ID");
   });
 
+  it("throws on duplicate original IDs in nested descendants", () => {
+    const items = [
+      {
+        id: "root",
+        name: "Root",
+        children: [
+          { id: "dup", name: "A" },
+          { id: "dup", name: "B" },
+        ],
+      },
+    ];
+    expect(() =>
+      normalizeItems(items as any, "nested", {
+        name: "name", description: null, children: "children", parent: null, id: "id",
+      }),
+    ).toThrow("Duplicate ID");
+  });
+
   it("importJson throws for no-string-field objects", () => {
     const raw = JSON.stringify([{ count: 1, active: true }]);
     expect(() => importJson(raw)).toThrow("No name field detected");

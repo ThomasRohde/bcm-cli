@@ -2,7 +2,7 @@ declare const __VERSION__: string;
 
 import { Command } from "commander";
 import { generateRequestId } from "./cli/request-id.js";
-import { writeEnvelope, writeStderr, setDiagnosticMode, writeStderrVerbose } from "./cli/output.js";
+import { writeEnvelope, writeStderr, setDiagnosticMode } from "./cli/output.js";
 import { errorEnvelope } from "./cli/envelope.js";
 import { BcmAppError } from "./cli/errors.js";
 import { runGuide } from "./cli/commands/guide.js";

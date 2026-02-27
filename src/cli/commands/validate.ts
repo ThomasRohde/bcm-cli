@@ -2,7 +2,7 @@ import type { Envelope, ValidateResult, ImportOptions } from "../../core/types.j
 import { successEnvelope, errorEnvelope } from "../envelope.js";
 import { BcmAppError } from "../errors.js";
 import { readInput } from "../../import/reader.js";
-import { importJson, filterRoots } from "../../import/index.js";
+import { importJson, filterRoots, summarizeModel } from "../../import/index.js";
 
 export function runValidate(
   inputPath: string | undefined,
@@ -13,18 +13,21 @@ export function runValidate(
   try {
     const raw = readInput(importOpts.stdin ? undefined : inputPath);
     const result = importJson(raw, importOpts);
+    let roots = result.roots;
+    const warnings = [...result.warnings];
 
     // --- Root filtering ---
     if (importOpts.root && importOpts.root.length > 0) {
-      const { filtered, warnings: rootWarnings } = filterRoots(result.roots, importOpts.root);
-      result.warnings.push(...rootWarnings);
-      result.roots.length = 0;
-      result.roots.push(...filtered);
+      const { filtered, warnings: rootWarnings } = filterRoots(roots, importOpts.root);
+      roots = filtered;
+      warnings.push(...rootWarnings);
     }
+    const summary = summarizeModel(roots);
     const duration_ms = Date.now() - start;
 
-    // Check if import produced validation errors in warnings
-    const hasValidationErrors = result.warnings.some(w =>
+    // Import-level validation errors are hard failures. This only catches
+    // warning-based validation codes if such warnings are introduced.
+    const hasValidationErrors = warnings.some((w) =>
       w.code.startsWith("ERR_VALIDATION_CYCLE") ||
       w.code.startsWith("ERR_VALIDATION_DUPLICATE")
     );
@@ -32,18 +35,19 @@ export function runValidate(
     return {
       envelope: successEnvelope<ValidateResult>("bcm.validate", {
         valid: !hasValidationErrors,
-        model_summary: result.summary,
+        model_summary: summary,
       }, {
-        warnings: result.warnings,
+        warnings,
         duration_ms,
         stages: { import_ms: duration_ms, validate_ms: 0 },
         request_id: requestId,
       }),
       exitCode: 0,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const normalizedError = err instanceof Error ? err : new Error(String(err));
     return {
-      envelope: errorEnvelope("bcm.validate", err instanceof BcmAppError ? err : new Error(err.message), {
+      envelope: errorEnvelope("bcm.validate", err instanceof BcmAppError ? err : normalizedError, {
         duration_ms: Date.now() - start,
         request_id: requestId,
       }),

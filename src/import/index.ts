@@ -72,7 +72,7 @@ function maxDepth(roots: CapabilityNode[]): number {
   return max;
 }
 
-function computeSummary(roots: CapabilityNode[]): ModelSummary {
+export function summarizeModel(roots: CapabilityNode[]): ModelSummary {
   return {
     nodes: countNodes(roots),
     roots: roots.length,
@@ -206,7 +206,7 @@ export function importJson(
   }
 
   // 7. Summarize
-  const summary = computeSummary(roots);
+  const summary = summarizeModel(roots);
 
   return {
     roots,

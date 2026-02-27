@@ -11,6 +11,12 @@ describe("detectSchema", () => {
       { name: "B", parent: "A" }
     ])).toBe("flat");
   });
+  it("does not treat scalar 'children' fields as nested", () => {
+    expect(detectSchema([
+      { id: "A", name: "A", children: 0, parent_id: null },
+      { id: "B", name: "B", children: 0, parent_id: "A" },
+    ] as any)).toBe("flat");
+  });
   it("detects simple schema", () => {
     expect(detectSchema([{ name: "A" }, { name: "B" }])).toBe("simple");
   });

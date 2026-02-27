@@ -24,6 +24,20 @@ describe("inspect command", () => {
     expect(envelope.result?.detected_schema).toBe("simple");
   });
 
+  it("recomputes summary after --root filtering", () => {
+    const baseline = runInspect(join(fixturesDir, "nested-simple.json"), {}, generateRequestId());
+    const filtered = runInspect(
+      join(fixturesDir, "nested-simple.json"),
+      { root: ["Customer Management"] },
+      generateRequestId(),
+    );
+    expect(filtered.envelope.ok).toBe(true);
+    expect(filtered.envelope.result?.model_summary.roots).toBe(1);
+    expect(filtered.envelope.result?.model_summary.nodes).toBeLessThan(
+      baseline.envelope.result?.model_summary.nodes ?? Number.POSITIVE_INFINITY,
+    );
+  });
+
   it("handles wrapped object", () => {
     const { envelope } = runInspect(join(fixturesDir, "wrapped-object.json"), {}, generateRequestId());
     expect(envelope.ok).toBe(true);

@@ -80,9 +80,11 @@ export function normalizeNode(
   nameField: string | null,
   descField: string | null,
   childrenField: string | null,
+  idField: string | null,
   parentPath: string,
   index: number,
   warnings?: BcmWarning[],
+  seenOriginalIds?: Map<string, string>,
 ): CapabilityNode {
   const rawName = nameField ? String(obj[nameField] ?? "") : "";
   const name = rawName.trim() || "-- unnamed --";
@@ -99,7 +101,18 @@ export function normalizeNode(
     ? (obj[descField] as string | undefined) ?? undefined
     : undefined;
 
-  const id = makeId(name, parentPath, index);
+  const originalId = idField ? String(obj[idField] ?? "").trim() : "";
+  if (originalId && seenOriginalIds) {
+    if (seenOriginalIds.has(originalId)) {
+      throw new BcmAppError(
+        ErrorCode.ERR_VALIDATION_DUPLICATE_ID,
+        `Duplicate ID "${originalId}" in nested schema`,
+        { id: originalId, name, firstName: seenOriginalIds.get(originalId) },
+      );
+    }
+    seenOriginalIds.set(originalId, name);
+  }
+  const id = originalId || makeId(name, parentPath, index);
   const currentPath = parentPath ? `${parentPath}/${slugify(name)}` : slugify(name);
 
   // Structural fields to skip when collecting properties
@@ -107,6 +120,7 @@ export function normalizeNode(
   if (nameField) skipFields.add(nameField);
   if (descField) skipFields.add(descField);
   if (childrenField) skipFields.add(childrenField);
+  if (idField) skipFields.add(idField);
 
   const properties = collectProperties(obj, skipFields, warnings);
 
@@ -123,9 +137,11 @@ export function normalizeNode(
             findNameField(child, nameField ?? undefined),
             findDescField(child, descField ?? undefined),
             findChildrenField(child, childrenField ?? undefined),
+            findIdField(child, idField ?? undefined),
             currentPath,
             i,
             warnings,
+            seenOriginalIds,
           ),
         );
       }
@@ -349,27 +365,10 @@ export function normalizeItems(
 ): { roots: CapabilityNode[]; warnings: BcmWarning[] } {
   const warnings: BcmWarning[] = [];
 
-  // Check for duplicate original IDs across all schemas — fail per PRD
-  if (fields.id) {
-    const seen = new Map<string, number>();
-    for (let i = 0; i < items.length; i++) {
-      const origId = String(items[i][fields.id] ?? "");
-      if (!origId) continue;
-      if (seen.has(origId)) {
-        throw new BcmAppError(
-          ErrorCode.ERR_VALIDATION_DUPLICATE_ID,
-          `Duplicate ID "${origId}" at index ${i}`,
-          { id: origId, index: i, firstIndex: seen.get(origId) },
-        );
-      } else {
-        seen.set(origId, i);
-      }
-    }
-  }
-
   switch (schema) {
     case "nested": {
       const roots: CapabilityNode[] = [];
+      const seenNestedIds = new Map<string, string>();
       for (let i = 0; i < items.length; i++) {
         roots.push(
           normalizeNode(
@@ -377,9 +376,11 @@ export function normalizeItems(
             fields.name,
             fields.description,
             fields.children,
+            fields.id,
             "",
             i,
             warnings,
+            seenNestedIds,
           ),
         );
       }
@@ -399,6 +400,21 @@ export function normalizeItems(
     }
 
     case "simple": {
+      if (fields.id) {
+        const seen = new Map<string, number>();
+        for (let i = 0; i < items.length; i++) {
+          const origId = String(items[i][fields.id] ?? "").trim();
+          if (!origId) continue;
+          if (seen.has(origId)) {
+            throw new BcmAppError(
+              ErrorCode.ERR_VALIDATION_DUPLICATE_ID,
+              `Duplicate ID "${origId}" at index ${i}`,
+              { id: origId, index: i, firstIndex: seen.get(origId) },
+            );
+          }
+          seen.set(origId, i);
+        }
+      }
       return {
         roots: normalizeSimple(items, fields.name, fields.description, warnings),
         warnings,

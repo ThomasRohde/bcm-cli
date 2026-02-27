@@ -87,6 +87,46 @@ describe("render command", () => {
     expect(envelope.result?.model_summary.roots).toBe(2);
   });
 
+  it("recomputes summary after --root filtering", async () => {
+    const { envelope: baseline } = await runRender(
+      join(fixturesDir, "nested-simple.json"),
+      {},
+      DEFAULT_LAYOUT_OPTIONS,
+      { outDir: tmpDir, svg: true, html: false, png: false, pdf: false, scale: 2, pageSize: "A4", pdfMargin: "10mm", dryRun: true },
+      undefined, undefined, undefined,
+      generateRequestId(),
+    );
+
+    const { envelope: filtered } = await runRender(
+      join(fixturesDir, "nested-simple.json"),
+      { root: ["Customer Management"] },
+      DEFAULT_LAYOUT_OPTIONS,
+      { outDir: tmpDir, svg: true, html: false, png: false, pdf: false, scale: 2, pageSize: "A4", pdfMargin: "10mm", dryRun: true },
+      undefined, undefined, undefined,
+      generateRequestId(),
+    );
+
+    expect(filtered.ok).toBe(true);
+    expect(filtered.result?.model_summary.roots).toBe(1);
+    expect(filtered.result?.model_summary.nodes).toBeLessThan(
+      baseline.result?.model_summary.nodes ?? Number.POSITIVE_INFINITY,
+    );
+  });
+
+  it("returns validation error for invalid numeric options", async () => {
+    const { envelope, exitCode } = await runRender(
+      join(fixturesDir, "nested-simple.json"),
+      {},
+      { gap: Number.NaN } as any,
+      { outDir: tmpDir, svg: true, html: false, png: false, pdf: false, scale: 2, pageSize: "A4", pdfMargin: "10mm", dryRun: true },
+      undefined, undefined, undefined,
+      generateRequestId(),
+    );
+    expect(exitCode).toBe(10);
+    expect(envelope.ok).toBe(false);
+    expect(envelope.errors[0].code).toBe("ERR_VALIDATION_OPTION");
+  });
+
   it("applies theme typography to rendered SVG text", async () => {
     const themePath = join(tmpDir, "theme-typography.json");
     writeFileSync(themePath, JSON.stringify({
