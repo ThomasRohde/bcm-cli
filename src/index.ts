@@ -2,9 +2,10 @@ declare const __VERSION__: string;
 
 import { Command } from "commander";
 import { generateRequestId } from "./cli/request-id.js";
-import { writeEnvelope, writeStderr, setDiagnosticMode } from "./cli/output.js";
+import { writeEnvelope, writeStderr, setDiagnosticMode, isAgentMode } from "./cli/output.js";
 import { errorEnvelope } from "./cli/envelope.js";
 import { BcmAppError } from "./cli/errors.js";
+import { applyHumanHelp } from "./cli/human-help.js";
 import { runGuide } from "./cli/commands/guide.js";
 import { runInspect } from "./cli/commands/inspect.js";
 import { runValidate } from "./cli/commands/validate.js";
@@ -21,12 +22,8 @@ import {
 } from "./cli/options.js";
 
 const program = new Command();
-
-program
-  .name("bcm")
-  .description("Agent-first CLI for rendering Business Capability Maps from JSON")
-  .version(__VERSION__)
-  .addHelpText("after", `
+const agentMode = isAgentMode();
+const machineModeHelp = `
 Input JSON schemas (auto-detected):
 
   nested   Array of objects with a children field (e.g. children, subCapabilities)
@@ -35,7 +32,16 @@ Input JSON schemas (auto-detected):
 
 Fields are auto-detected. Override with --nameField, --childrenField, etc.
 Run "bcm guide" for full schema documentation with examples.
-`);
+`;
+
+program
+  .name("bcm")
+  .description("Agent-first CLI for rendering Business Capability Maps from JSON")
+  .version(__VERSION__);
+
+if (agentMode) {
+  program.addHelpText("after", machineModeHelp);
+}
 
 // --- guide ---
 program
@@ -212,5 +218,11 @@ process.on("uncaughtException", (err) => {
   writeStderr(`[${requestId}] Uncaught exception: ${err}`);
   process.exit(90);
 });
+
+if (!agentMode) {
+  applyHumanHelp(program);
+  program.showSuggestionAfterError(true);
+  program.showHelpAfterError('\nRun "bcm --help" for command details.\n');
+}
 
 program.parse();
