@@ -119,181 +119,254 @@ export function wrapHtml(
 <title>Business Capability Map</title>
 <style>
   :root {
-    --bcm-bg-1: #f2f7ff;
-    --bcm-bg-2: #fef6e8;
-    --bcm-surface: rgba(255, 255, 255, 0.92);
+    --bcm-bg-1: #f8fafc;
+    --bcm-bg-2: #eff6ff;
+    --bcm-surface: rgba(255, 255, 255, 0.65);
     --bcm-surface-solid: #ffffff;
-    --bcm-border: #c7d2df;
-    --bcm-shadow: 0 16px 32px rgba(15, 42, 70, 0.16);
-    --bcm-accent: #0f5f67;
-    --bcm-accent-alt: #d95f0e;
-    --bcm-text: #152238;
-    --bcm-muted: #51627a;
+    --bcm-border: rgba(148, 163, 184, 0.3);
+    --bcm-border-hover: rgba(59, 130, 246, 0.5);
+    --bcm-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(148, 163, 184, 0.1);
+    --bcm-shadow-sm: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(148, 163, 184, 0.1);
+    --bcm-accent: #2563eb;
+    --bcm-accent-alt: #ea580c;
+    --bcm-text: #0f172a;
+    --bcm-muted: #64748b;
+    --bcm-font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     min-height: 100vh;
     color: var(--bcm-text);
-    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    font-family: var(--bcm-font);
     background:
-      radial-gradient(circle at 12% 18%, rgba(148, 189, 255, 0.32), transparent 36%),
-      radial-gradient(circle at 88% 4%, rgba(255, 188, 107, 0.3), transparent 34%),
-      linear-gradient(140deg, var(--bcm-bg-1), var(--bcm-bg-2));
+      radial-gradient(circle at 10% 20%, rgba(191, 219, 254, 0.5), transparent 40%),
+      radial-gradient(circle at 90% 10%, rgba(253, 230, 138, 0.4), transparent 40%),
+      radial-gradient(circle at 50% 80%, rgba(221, 214, 254, 0.5), transparent 50%),
+      linear-gradient(135deg, var(--bcm-bg-1), var(--bcm-bg-2));
+    background-attachment: fixed;
   }
   .bcm-shell {
-    width: min(1500px, 100%);
+    width: min(1600px, 100%);
     margin: 0 auto;
     min-height: 100vh;
-    padding: 14px;
+    padding: 20px;
     display: grid;
     grid-template-rows: auto 1fr;
-    gap: 12px;
+    gap: 16px;
   }
   .bcm-toolbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
-    padding: 12px;
-    border: 1px solid var(--bcm-border);
+    padding: 14px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
     background: var(--bcm-surface);
-    border-radius: 14px;
+    border-radius: 20px;
     box-shadow: var(--bcm-shadow);
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
   .bcm-toolbar__title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
-    margin-right: 8px;
-    letter-spacing: 0.02em;
+    margin-right: 12px;
+    letter-spacing: -0.01em;
+    background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   .bcm-search {
     flex: 1 1 320px;
     display: flex;
-    gap: 8px;
+    gap: 10px;
     align-items: center;
   }
   .bcm-search input {
     width: 100%;
-    height: 36px;
-    border-radius: 10px;
+    height: 40px;
+    border-radius: 12px;
     border: 1px solid var(--bcm-border);
-    padding: 0 12px;
+    padding: 0 16px;
     font: inherit;
+    font-size: 14px;
     color: var(--bcm-text);
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  }
+  .bcm-search input:hover {
     background: #ffffff;
+    border-color: var(--bcm-border-hover);
   }
   .bcm-search input:focus-visible {
-    outline: 2px solid rgba(15, 95, 103, 0.28);
+    outline: none;
+    background: #ffffff;
     border-color: var(--bcm-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
   }
   .bcm-btn {
     border: 1px solid var(--bcm-border);
-    background: linear-gradient(180deg, #ffffff, #eef4fb);
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
     color: var(--bcm-text);
-    height: 34px;
-    min-width: 34px;
-    border-radius: 10px;
-    padding: 0 12px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 12px;
+    padding: 0 16px;
     cursor: pointer;
     font: inherit;
+    font-size: 14px;
     font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .bcm-btn:hover { border-color: #9fb2c8; }
+  .bcm-btn:hover { 
+    background: #ffffff;
+    border-color: var(--bcm-border-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  }
+  .bcm-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
   .bcm-btn:focus-visible {
-    outline: 2px solid rgba(15, 95, 103, 0.26);
-    outline-offset: 1px;
+    outline: none;
+    border-color: var(--bcm-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
   }
   .bcm-controls {
     display: flex;
     gap: 8px;
     align-items: center;
   }
+  #bcm-zoom-in, #bcm-zoom-out {
+    padding: 0;
+    width: 40px;
+    font-size: 18px;
+  }
   .bcm-main {
     min-height: 0;
     display: grid;
-    grid-template-columns: minmax(240px, 320px) 1fr;
-    gap: 12px;
+    grid-template-columns: minmax(260px, 340px) 1fr;
+    gap: 16px;
   }
   .bcm-sidebar {
-    border: 1px solid var(--bcm-border);
-    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
     background: var(--bcm-surface);
     box-shadow: var(--bcm-shadow);
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
   .bcm-sidebar__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    border-bottom: 1px solid var(--bcm-border);
-    padding: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.4);
   }
   .bcm-sidebar__header h2 {
-    font-size: 14px;
+    font-size: 13px;
     margin: 0;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
+    font-weight: 700;
+    color: var(--bcm-muted);
   }
   .bcm-count {
-    color: var(--bcm-muted);
+    color: var(--bcm-accent);
+    background: rgba(37, 99, 235, 0.1);
     font-size: 12px;
     font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
   }
   .bcm-results {
     margin: 0;
-    padding: 8px;
+    padding: 12px;
     list-style: none;
     overflow: auto;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .bcm-results::-webkit-scrollbar,
+  .bcm-tooltip__body::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .bcm-results::-webkit-scrollbar-track,
+  .bcm-tooltip__body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .bcm-results::-webkit-scrollbar-thumb,
+  .bcm-tooltip__body::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 10px;
+  }
+  .bcm-results::-webkit-scrollbar-thumb:hover,
+  .bcm-tooltip__body::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.5);
   }
   .bcm-result-btn {
     width: 100%;
     text-align: left;
     border: 1px solid transparent;
-    border-radius: 10px;
+    border-radius: 12px;
     background: transparent;
-    padding: 8px 10px;
+    padding: 10px 14px;
     color: var(--bcm-text);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 12px;
     cursor: pointer;
     font: inherit;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .bcm-result-btn:hover {
-    background: rgba(15, 95, 103, 0.08);
-    border-color: rgba(15, 95, 103, 0.2);
+    background: #ffffff;
+    box-shadow: var(--bcm-shadow-sm);
+    transform: translateX(2px);
   }
   .bcm-result-name {
     display: block;
-    font-size: 13px;
-    line-height: 1.25;
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.4;
   }
   .bcm-depth-badge {
-    color: #ffffff;
-    background: var(--bcm-accent);
-    border-radius: 999px;
+    color: var(--bcm-accent);
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    border-radius: 6px;
     font-size: 11px;
     line-height: 1;
-    padding: 4px 8px;
+    padding: 4px 6px;
     font-weight: 700;
     white-space: nowrap;
   }
   .bcm-results__empty {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--bcm-muted);
-    padding: 10px;
+    padding: 20px;
+    text-align: center;
   }
   .bcm-stage {
-    border: 1px solid var(--bcm-border);
-    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
     background: var(--bcm-surface-solid);
     box-shadow: var(--bcm-shadow);
     overflow: hidden;
@@ -316,6 +389,10 @@ export function wrapHtml(
     will-change: transform;
     width: ${width}px;
     height: ${height}px;
+    transition: transform 0.1s linear;
+  }
+  .bcm-canvas.bcm-dragging-canvas {
+    transition: none;
   }
   .bcm-canvas svg {
     display: block;
@@ -323,75 +400,114 @@ export function wrapHtml(
     height: auto;
     background: ${theme.palette.background};
   }
-  .bcm-node { cursor: pointer; transition: opacity 120ms ease-out; }
+  .bcm-node { cursor: pointer; transition: opacity 200ms ease-out; }
   .bcm-node text { pointer-events: none; }
-  .bcm-node.bcm-dim { opacity: 0.2; }
+  .bcm-node.bcm-dim { opacity: 0.15; }
+  .bcm-node rect {
+    transition: all 0.2s ease-out;
+  }
+  .bcm-node:hover rect {
+    filter: brightness(0.95);
+  }
   .bcm-node.bcm-match rect {
     stroke: var(--bcm-accent) !important;
-    stroke-width: 2.2 !important;
+    stroke-width: 2.5 !important;
   }
   .bcm-node.bcm-selected rect {
     stroke: var(--bcm-accent-alt) !important;
-    stroke-width: 2.8 !important;
-    filter: drop-shadow(0 0 7px rgba(217, 95, 14, 0.42));
+    stroke-width: 3.5 !important;
+    filter: drop-shadow(0 4px 12px rgba(234, 88, 12, 0.4));
   }
   .bcm-tooltip {
     position: fixed;
-    z-index: 20;
-    width: min(380px, calc(100vw - 24px));
-    border: 1px solid var(--bcm-border);
-    border-radius: 14px;
+    z-index: 1000;
+    width: min(420px, calc(100vw - 32px));
+    border-radius: 16px;
     box-shadow: var(--bcm-shadow);
-    background: rgba(255, 255, 255, 0.97);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     overflow: hidden;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+  }
+  .bcm-tooltip.bcm-tooltip--visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
   .bcm-tooltip__head {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 8px;
-    border-bottom: 1px solid var(--bcm-border);
-    padding: 10px 12px;
+    gap: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.4);
   }
   .bcm-tooltip__title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     line-height: 1.3;
+    color: var(--bcm-text);
   }
   .bcm-tooltip__meta {
     color: var(--bcm-muted);
-    font-size: 11px;
-    margin-top: 2px;
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 500;
   }
   .bcm-tooltip__close {
-    width: 26px;
-    height: 26px;
-    border: 1px solid var(--bcm-border);
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
     border-radius: 8px;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.5);
     cursor: pointer;
     font-weight: 700;
+    color: var(--bcm-muted);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bcm-tooltip__close:hover {
+    background: #ffffff;
+    color: var(--bcm-text);
+    border-color: rgba(148, 163, 184, 0.6);
   }
   .bcm-tooltip__body {
-    padding: 12px;
-    font-size: 13px;
-    line-height: 1.45;
-    max-height: min(45vh, 380px);
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    max-height: min(50vh, 400px);
     overflow: auto;
+    color: #334155;
   }
   .bcm-tooltip__body p:first-child { margin-top: 0; }
   .bcm-tooltip__body p:last-child { margin-bottom: 0; }
   .bcm-tooltip__body pre {
-    padding: 8px;
+    padding: 12px;
     border-radius: 8px;
     overflow: auto;
-    background: #edf2f8;
+    background: rgba(15, 23, 42, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.05);
   }
   .bcm-tooltip__body code {
-    font-family: "Consolas", "Courier New", monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     font-size: 12px;
   }
-  .bcm-tooltip__body a { color: var(--bcm-accent); }
+  .bcm-tooltip__body a { 
+    color: var(--bcm-accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .bcm-tooltip__body a:hover {
+    text-decoration: underline;
+  }
   .bcm-tooltip__empty {
     color: var(--bcm-muted);
     font-style: italic;
@@ -442,11 +558,13 @@ export function wrapHtml(
   }
   @media (max-width: 960px) {
     .bcm-main { grid-template-columns: 1fr; }
-    .bcm-sidebar { max-height: 260px; }
+    .bcm-sidebar { max-height: 300px; }
     .bcm-stage { min-height: 54vh; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .bcm-node { transition: none; }
+    .bcm-node, .bcm-node rect, .bcm-result-btn, .bcm-tooltip, .bcm-btn, .bcm-search input { 
+      transition: none; 
+    }
   }
 </style>
 </head>
@@ -482,7 +600,7 @@ ${svg}
   </div>
 </div>
 
-<aside id="bcm-tooltip" class="bcm-tooltip" hidden>
+<aside id="bcm-tooltip" class="bcm-tooltip">
   <div class="bcm-tooltip__head">
     <div>
       <div id="bcm-tooltip-title" class="bcm-tooltip__title"></div>
@@ -627,13 +745,13 @@ ${svg}
     if (!meta) return;
     tooltipTitle.textContent = meta.name;
     tooltipBody.innerHTML = meta.descriptionHtml || EMPTY_DESCRIPTION_HTML;
-    tooltipMeta.textContent = isPinned ? "Pinned. Press Esc to close." : "Click a node to pin.";
-    tooltip.hidden = false;
+    tooltipMeta.textContent = isPinned ? "Pinned. Press Esc to close." : "Click capability to pin.";
+    tooltip.classList.add("bcm-tooltip--visible");
     setTooltipPosition(clientX, clientY);
   }
 
   function hideTooltip() {
-    tooltip.hidden = true;
+    tooltip.classList.remove("bcm-tooltip--visible");
   }
 
   function getNodeScreenCenter(id) {
@@ -668,6 +786,9 @@ ${svg}
   }
 
   function clearNodeClasses() {
+    setSelectedNode(null);
+    pinnedId = null;
+    hideTooltip();
     svgNodes.forEach((el) => {
       el.classList.remove("bcm-dim");
       el.classList.remove("bcm-match");
@@ -836,6 +957,7 @@ ${svg}
     dragStartX = event.clientX;
     dragStartY = event.clientY;
     stage.classList.add("bcm-dragging");
+    canvas.classList.add("bcm-dragging-canvas");
     stage.setPointerCapture(event.pointerId);
   });
 
@@ -850,16 +972,53 @@ ${svg}
 
   stage.addEventListener("pointerup", (event) => {
     if (dragPointerId !== event.pointerId) return;
+    
+    const dist = Math.hypot(event.clientX - dragStartX, event.clientY - dragStartY);
+    const wasClick = dist < 5;
+
     dragging = false;
     dragPointerId = null;
     stage.classList.remove("bcm-dragging");
+    canvas.classList.remove("bcm-dragging-canvas");
     stage.releasePointerCapture(event.pointerId);
+
+    if (wasClick) {
+      const targetElement = document.elementFromPoint(event.clientX, event.clientY);
+      const node = getNodeElement(targetElement);
+      if (node) {
+        const nodeId = node.getAttribute("data-node-id");
+        if (nodeId) {
+          setSelectedNode(nodeId);
+          if (pinnedId === nodeId) {
+            pinnedId = null;
+            if (hoveredId === nodeId) {
+              showTooltip(nodeId, false, lastPointerX, lastPointerY);
+            } else {
+              hideTooltip();
+            }
+          } else {
+            pinnedId = nodeId;
+            const center = getNodeScreenCenter(nodeId);
+            if (center) {
+              showTooltip(nodeId, true, center.x, center.y);
+            } else {
+              showTooltip(nodeId, true, lastPointerX, lastPointerY);
+            }
+          }
+        }
+      } else {
+        pinnedId = null;
+        setSelectedNode(null);
+        hideTooltip();
+      }
+    }
   });
 
   stage.addEventListener("pointercancel", () => {
     dragging = false;
     dragPointerId = null;
     stage.classList.remove("bcm-dragging");
+    canvas.classList.remove("bcm-dragging-canvas");
   });
 
   svg.addEventListener("pointermove", (event) => {
@@ -867,8 +1026,10 @@ ${svg}
     lastPointerY = event.clientY;
     const node = getNodeElement(event.target);
     if (!node) {
-      hoveredId = null;
-      if (!pinnedId) hideTooltip();
+      if (hoveredId) {
+        hoveredId = null;
+        if (!pinnedId) hideTooltip();
+      }
       return;
     }
 
@@ -885,31 +1046,7 @@ ${svg}
     if (!pinnedId) hideTooltip();
   });
 
-  svg.addEventListener("click", (event) => {
-    const node = getNodeElement(event.target);
-    if (!node) return;
-    const nodeId = node.getAttribute("data-node-id");
-    if (!nodeId) return;
 
-    setSelectedNode(nodeId);
-    if (pinnedId === nodeId) {
-      pinnedId = null;
-      if (hoveredId === nodeId) {
-        showTooltip(nodeId, false, lastPointerX, lastPointerY);
-      } else {
-        hideTooltip();
-      }
-      return;
-    }
-
-    pinnedId = nodeId;
-    const center = getNodeScreenCenter(nodeId);
-    if (center) {
-      showTooltip(nodeId, true, center.x, center.y);
-    } else {
-      showTooltip(nodeId, true, lastPointerX, lastPointerY);
-    }
-  });
 
   tooltipClose.addEventListener("click", () => {
     pinnedId = null;
@@ -931,7 +1068,7 @@ ${svg}
   });
 
   window.addEventListener("resize", () => {
-    if (tooltip.hidden || !pinnedId) return;
+    if (!tooltip.classList.contains("bcm-tooltip--visible") || !pinnedId) return;
     const center = getNodeScreenCenter(pinnedId);
     if (center) setTooltipPosition(center.x, center.y);
   });

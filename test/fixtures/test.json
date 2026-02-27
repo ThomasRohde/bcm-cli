@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Customer Management",
+    "description": "Managing customer relationships",
+    "children": [
+      { "name": "Customer Onboarding", "description": "New customer setup" },
+      { "name": "Customer Support", "description": "Customer issue resolution" },
+      { "name": "Customer Analytics", "description": "Customer data analysis" }
+    ]
+  },
+  {
+    "name": "Product Management",
+    "description": "Managing products",
+    "children": [
+      { "name": "Product Development", "description": "Creating new products" },
+      { "name": "Product Marketing", "description": "Marketing products" }
+    ]
+  }
+]
