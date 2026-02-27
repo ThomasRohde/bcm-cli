@@ -10,6 +10,7 @@ import type {
   Artefact,
   StageMetrics,
 } from "../../core/types.js";
+import { DEFAULT_LAYOUT_OPTIONS } from "../../core/defaults.js";
 import { successEnvelope, errorEnvelope } from "../envelope.js";
 import { BcmAppError } from "../errors.js";
 import { readInput } from "../../import/reader.js";
@@ -25,7 +26,7 @@ import { createStubMeasurer, createFontMeasurer } from "../../fonts/metrics.js";
 export async function runRender(
   inputPath: string | undefined,
   importOpts: ImportOptions,
-  layoutOpts: LayoutOptions,
+  layoutOpts: Partial<LayoutOptions>,
   exportOpts: ExportOptions,
   themeFile: string | undefined,
   fontName: string | undefined,
@@ -59,18 +60,25 @@ export async function runRender(
 
     // --- Theme ---
     writeStderrVerbose("[render] Resolving theme...");
+    const fontSizeOverride = fontSize ? parseInt(fontSize, 10) : undefined;
     const theme = resolveTheme(
       {
         font: fontName,
-        fontSize: fontSize ? parseInt(fontSize, 10) : undefined,
+        fontSize: fontSizeOverride,
       },
       themeFile,
     );
 
+    const effectiveLayoutOpts: LayoutOptions = {
+      ...DEFAULT_LAYOUT_OPTIONS,
+      ...theme.spacing,
+      ...layoutOpts,
+    };
+
     // --- Layout ---
     writeStderrVerbose("[render] Computing layout...");
     const layoutStart = Date.now();
-    const fontSizeNum = fontSize ? parseInt(fontSize, 10) : theme.typography.leafFont.size;
+    const fontSizeNum = fontSizeOverride ?? theme.typography.leafFont.size;
     let measureText;
     const pkgRoot = dirname(dirname(dirname(fileURLToPath(import.meta.url))));
     const interFontPath = join(pkgRoot, "assets", "fonts", "Inter-Regular.ttf");
@@ -81,7 +89,7 @@ export async function runRender(
       writeStderrVerbose("[render] Inter font not found, using stub measurer");
       measureText = createStubMeasurer();
     }
-    const layoutResult = layoutTrees(importResult.roots, layoutOpts, measureText);
+    const layoutResult = layoutTrees(importResult.roots, effectiveLayoutOpts, measureText);
     stages.layout_ms = Date.now() - layoutStart;
 
     // --- Render ---

@@ -139,24 +139,42 @@ addImportOptions(renderCmd)
   .addOption(quietOption)
   .addOption(verboseOption)
   .addOption(outputOption)
-  .action(async (input: string | undefined, opts: Record<string, unknown>) => {
+  .action(async (input: string | undefined, opts: Record<string, unknown>, cmd: Command) => {
     setDiagnosticMode(opts.quiet as boolean, opts.verbose as boolean);
     const requestId = generateRequestId();
     const importOpts = parseImportOpts(opts);
-    const layoutOpts: LayoutOptions = {
-      gap: parseInt(opts.gap as string, 10),
-      padding: parseInt(opts.padding as string, 10),
-      headerHeight: parseInt(opts.headerHeight as string, 10),
-      rootGap: parseInt(opts.rootGap as string, 10),
-      viewMargin: parseInt(opts.margin as string, 10),
-      aspectRatio: parseFloat(opts.aspectRatio as string),
-      alignment: opts.alignment as LayoutOptions["alignment"],
-      maxDepth: (opts.maxDepth as string) === "all" ? -1 : parseInt(opts.maxDepth as string, 10),
-      sortMode: opts.sort as LayoutOptions["sortMode"],
-      minLeafWidth: parseInt(opts.minLeafWidth as string, 10),
-      maxLeafWidth: parseInt(opts.maxLeafWidth as string, 10),
-      leafHeight: parseInt(opts.leafHeight as string, 10),
-    };
+    const isCliOverride = (optionName: string) =>
+      cmd.getOptionValueSource(optionName) === "cli";
+
+    const layoutOpts: Partial<LayoutOptions> = {};
+    if (isCliOverride("gap")) layoutOpts.gap = parseInt(opts.gap as string, 10);
+    if (isCliOverride("padding")) layoutOpts.padding = parseInt(opts.padding as string, 10);
+    if (isCliOverride("headerHeight"))
+      layoutOpts.headerHeight = parseInt(opts.headerHeight as string, 10);
+    if (isCliOverride("rootGap"))
+      layoutOpts.rootGap = parseInt(opts.rootGap as string, 10);
+    if (isCliOverride("margin"))
+      layoutOpts.viewMargin = parseInt(opts.margin as string, 10);
+    if (isCliOverride("aspectRatio"))
+      layoutOpts.aspectRatio = parseFloat(opts.aspectRatio as string);
+    if (isCliOverride("alignment"))
+      layoutOpts.alignment = opts.alignment as LayoutOptions["alignment"];
+    if (isCliOverride("maxDepth")) {
+      layoutOpts.maxDepth = (opts.maxDepth as string) === "all"
+        ? -1
+        : parseInt(opts.maxDepth as string, 10);
+    }
+    if (isCliOverride("sort"))
+      layoutOpts.sortMode = opts.sort as LayoutOptions["sortMode"];
+    if (isCliOverride("minLeafWidth"))
+      layoutOpts.minLeafWidth = parseInt(opts.minLeafWidth as string, 10);
+    if (isCliOverride("maxLeafWidth"))
+      layoutOpts.maxLeafWidth = parseInt(opts.maxLeafWidth as string, 10);
+    if (isCliOverride("leafHeight"))
+      layoutOpts.leafHeight = parseInt(opts.leafHeight as string, 10);
+
+    const fontName = isCliOverride("font") ? (opts.font as string | undefined) : undefined;
+    const fontSize = isCliOverride("fontSize") ? (opts.fontSize as string | undefined) : undefined;
     const exportOpts: ExportOptions = {
       outDir: opts.outDir as string,
       svg: opts.svg as boolean,
@@ -174,8 +192,8 @@ addImportOptions(renderCmd)
       layoutOpts,
       exportOpts,
       opts.theme as string | undefined,
-      opts.font as string | undefined,
-      opts.fontSize as string | undefined,
+      fontName,
+      fontSize,
       requestId,
     );
     writeEnvelope(envelope);
