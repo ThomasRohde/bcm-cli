@@ -353,6 +353,26 @@ export function wrapHtml(
     font-weight: 700;
     white-space: nowrap;
   }
+  .bcm-result-badges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .bcm-relevance-meter {
+    display: block;
+    width: 40px;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(148, 163, 184, 0.18);
+    overflow: hidden;
+  }
+  .bcm-relevance-fill {
+    display: block;
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease-out;
+  }
   .bcm-results__empty {
     font-size: 14px;
     color: var(--bcm-muted);
@@ -557,8 +577,8 @@ export function wrapHtml(
     .bcm-stage { min-height: 54vh; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .bcm-node, .bcm-node rect, .bcm-result-btn, .bcm-tooltip, .bcm-btn, .bcm-search input { 
-      transition: none; 
+    .bcm-node, .bcm-node rect, .bcm-result-btn, .bcm-tooltip, .bcm-btn, .bcm-search input, .bcm-relevance-fill {
+      transition: none;
     }
   }
 </style>
@@ -675,6 +695,65 @@ ${svg}
     const id = el.getAttribute("data-node-id");
     if (id) svgNodes.set(id, el);
   });
+
+  // BM25 search index
+  const BM25_K1 = 1.2;
+  const BM25_B = 0.75;
+  const STOP_WORDS = new Set([
+    "a","an","and","are","as","at","be","but","by","for","if","in","into",
+    "is","it","no","not","of","on","or","such","that","the","their","then",
+    "there","these","they","this","to","was","will","with"
+  ]);
+
+  function tokenize(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]/g, " ").split(/\\s+/)
+      .filter(function(t) { return t.length > 1 && !STOP_WORDS.has(t); });
+  }
+
+  var docTokens = [];
+  var totalTokens = 0;
+  for (var di = 0; di < nodeData.length; di++) {
+    var tokens = tokenize(nodeData[di].searchText || "");
+    docTokens.push({ tokens: tokens, length: tokens.length });
+    totalTokens += tokens.length;
+  }
+  var corpusSize = nodeData.length;
+  var avgDocLength = corpusSize > 0 ? totalTokens / corpusSize : 1;
+
+  var docFreq = new Map();
+  for (var di2 = 0; di2 < docTokens.length; di2++) {
+    var seen = new Set(docTokens[di2].tokens);
+    seen.forEach(function(term) {
+      docFreq.set(term, (docFreq.get(term) || 0) + 1);
+    });
+  }
+
+  function scoreBM25(queryTokens) {
+    var results = [];
+    for (var i = 0; i < nodeData.length; i++) {
+      var doc = docTokens[i];
+      var tf = new Map();
+      for (var j = 0; j < doc.tokens.length; j++) {
+        var t = doc.tokens[j];
+        tf.set(t, (tf.get(t) || 0) + 1);
+      }
+      var score = 0;
+      for (var q = 0; q < queryTokens.length; q++) {
+        var term = queryTokens[q];
+        var freq = tf.get(term) || 0;
+        if (freq === 0) continue;
+        var df = docFreq.get(term) || 0;
+        var idf = Math.max(0, Math.log((corpusSize - df + 0.5) / (df + 0.5) + 1));
+        var tfNorm = (freq * (BM25_K1 + 1)) / (freq + BM25_K1 * (1 - BM25_B + BM25_B * doc.length / avgDocLength));
+        score += idf * tfNorm;
+      }
+      if (score > 0) {
+        results.push({ id: nodeData[i].id, score: score });
+      }
+    }
+    results.sort(function(a, b) { return b.score - a.score; });
+    return results;
+  }
 
   let scale = 1;
   let translateX = 0;
@@ -811,25 +890,47 @@ ${svg}
       return;
     }
 
-    for (const match of matches) {
-      const li = document.createElement("li");
-      const button = document.createElement("button");
+    var maxScore = matches[0].score || 1;
+
+    for (var mi = 0; mi < matches.length; mi++) {
+      var match = matches[mi];
+      var li = document.createElement("li");
+      var button = document.createElement("button");
       button.type = "button";
       button.className = "bcm-result-btn";
       button.dataset.nodeId = match.id;
 
-      const name = document.createElement("span");
-      name.className = "bcm-result-name";
-      name.textContent = match.name;
+      var nameSpan = document.createElement("span");
+      nameSpan.className = "bcm-result-name";
+      nameSpan.textContent = match.name;
 
-      const badge = document.createElement("span");
+      var badges = document.createElement("span");
+      badges.className = "bcm-result-badges";
+
+      var normalized = maxScore > 0 ? match.score / maxScore : 0;
+      var pct = Math.round(normalized * 100);
+      var meter = document.createElement("span");
+      meter.className = "bcm-relevance-meter";
+      meter.setAttribute("aria-label", "Relevance: " + pct + "%");
+      meter.title = "Relevance: " + pct + "%";
+
+      var fill = document.createElement("span");
+      fill.className = "bcm-relevance-fill";
+      fill.style.width = pct + "%";
+      var sat = Math.round(30 + normalized * 60);
+      var lit = Math.round(70 - normalized * 25);
+      fill.style.background = "hsl(217, " + sat + "%, " + lit + "%)";
+      meter.append(fill);
+
+      var badge = document.createElement("span");
       badge.className = "bcm-depth-badge";
       badge.textContent = "L" + String(match.depth);
 
-      button.append(name, badge);
-      button.addEventListener("click", () => {
-        focusNode(match.id, true);
-      });
+      badges.append(meter, badge);
+      button.append(nameSpan, badges);
+      button.addEventListener("click", (function(id) {
+        return function() { focusNode(id, true); };
+      })(match.id));
 
       li.append(button);
       resultsList.append(li);
@@ -845,15 +946,46 @@ ${svg}
       return;
     }
 
-    lastMatches = nodeData.filter((entry) =>
-      typeof entry.searchText === "string" && entry.searchText.includes(query),
-    );
-    const matchIds = new Set(lastMatches.map((entry) => entry.id));
+    var queryTokens = tokenize(query);
 
-    svgNodes.forEach((el, id) => {
-      const match = matchIds.has(id);
-      el.classList.toggle("bcm-match", match);
-      el.classList.toggle("bcm-dim", !match);
+    if (queryTokens.length === 0) {
+      // Fallback: substring match with uniform score for short/stop-word queries
+      var substringMatches = [];
+      for (var si = 0; si < nodeData.length; si++) {
+        var entry = nodeData[si];
+        if (typeof entry.searchText === "string" && entry.searchText.includes(query)) {
+          substringMatches.push({
+            id: entry.id,
+            name: entry.name,
+            depth: entry.depth,
+            score: 1
+          });
+        }
+      }
+      lastMatches = substringMatches;
+    } else {
+      var scored = scoreBM25(queryTokens);
+      var enriched = [];
+      for (var ei = 0; ei < scored.length; ei++) {
+        var meta = dataById.get(scored[ei].id);
+        if (meta) {
+          enriched.push({
+            id: scored[ei].id,
+            name: meta.name,
+            depth: meta.depth,
+            score: scored[ei].score
+          });
+        }
+      }
+      lastMatches = enriched;
+    }
+
+    var matchIds = new Set(lastMatches.map(function(m) { return m.id; }));
+
+    svgNodes.forEach(function(el, id) {
+      var isMatch = matchIds.has(id);
+      el.classList.toggle("bcm-match", isMatch);
+      el.classList.toggle("bcm-dim", !isMatch);
     });
 
     renderResults(query, lastMatches);
