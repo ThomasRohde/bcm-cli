@@ -122,6 +122,9 @@ export interface ThemeConfig {
     headerHeight: number;
     rootGap: number;
     viewMargin: number;
+    minLeafWidth: number;
+    maxLeafWidth: number;
+    leafHeight: number;
   };
   display: {
     cornerRadius: number;

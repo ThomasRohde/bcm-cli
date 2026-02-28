@@ -1,91 +1,91 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`golden snapshot tests > flat-by-id renders consistently 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="494" height="243" viewBox="0 0 494 243">
-  <rect x="0" y="0" width="494" height="243" fill="#FFFFFF" />
-  <g class="bcm-node bcm-node--parent" data-node-id="1" data-node-name="Sales" data-node-depth="0" data-node-leaf="false" data-node-x="20" data-node-y="20" data-node-w="212" data-node-h="203">
-  <rect x="20" y="20" width="212" height="203" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
-  <text x="126" y="40" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="bold" fill="#000000">Sales</text>
+"<svg xmlns="http://www.w3.org/2000/svg" width="494" height="281" viewBox="0 0 494 281">
+  <rect x="0" y="0" width="494" height="281" fill="#FFFFFF" />
+  <g class="bcm-node bcm-node--parent" data-node-id="1" data-node-name="Sales" data-node-depth="0" data-node-leaf="false" data-node-x="20" data-node-y="20" data-node-w="212" data-node-h="241">
+  <rect x="20" y="20" width="212" height="241" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
+  <text x="126" y="44" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="13" font-weight="bold" fill="#000000">Sales</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="2" data-node-name="Lead Generation" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="60" data-node-w="188" data-node-h="45">
-  <rect x="32" y="60" width="188" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="126" y="82.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Lead Generation</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="2" data-node-name="Lead Generation" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="68" data-node-w="188" data-node-h="55">
+  <rect x="32" y="68" width="188" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="126" y="95.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Lead Generation</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="3" data-node-name="Opportunity Management" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="113" data-node-w="188" data-node-h="45">
-  <rect x="32" y="113" width="188" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="126" y="135.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Opportunity Management</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="3" data-node-name="Opportunity Management" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="131" data-node-w="188" data-node-h="55">
+  <rect x="32" y="131" width="188" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="126" y="158.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Opportunity Management</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="4" data-node-name="Quote Management" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="166" data-node-w="188" data-node-h="45">
-  <rect x="32" y="166" width="188" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="126" y="188.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Quote Management</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="4" data-node-name="Quote Management" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="194" data-node-w="188" data-node-h="55">
+  <rect x="32" y="194" width="188" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="126" y="221.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Quote Management</text>
   </g>
-  <g class="bcm-node bcm-node--parent" data-node-id="5" data-node-name="Marketing" data-node-depth="0" data-node-leaf="false" data-node-x="262" data-node-y="20" data-node-w="212" data-node-h="150">
-  <rect x="262" y="20" width="212" height="150" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
-  <text x="368" y="40" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="bold" fill="#000000">Marketing</text>
+  <g class="bcm-node bcm-node--parent" data-node-id="5" data-node-name="Marketing" data-node-depth="0" data-node-leaf="false" data-node-x="262" data-node-y="20" data-node-w="212" data-node-h="178">
+  <rect x="262" y="20" width="212" height="178" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
+  <text x="368" y="44" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="13" font-weight="bold" fill="#000000">Marketing</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="7" data-node-name="Brand Management" data-node-depth="1" data-node-leaf="true" data-node-x="274" data-node-y="60" data-node-w="188" data-node-h="45">
-  <rect x="274" y="60" width="188" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="368" y="82.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Brand Management</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="7" data-node-name="Brand Management" data-node-depth="1" data-node-leaf="true" data-node-x="274" data-node-y="68" data-node-w="188" data-node-h="55">
+  <rect x="274" y="68" width="188" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="368" y="95.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Brand Management</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="6" data-node-name="Campaign Management" data-node-depth="1" data-node-leaf="true" data-node-x="274" data-node-y="113" data-node-w="188" data-node-h="45">
-  <rect x="274" y="113" width="188" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="368" y="135.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Campaign Management</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="6" data-node-name="Campaign Management" data-node-depth="1" data-node-leaf="true" data-node-x="274" data-node-y="131" data-node-w="188" data-node-h="55">
+  <rect x="274" y="131" width="188" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="368" y="158.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Campaign Management</text>
   </g>
 </svg>"
 `;
 
 exports[`golden snapshot tests > nested-simple renders consistently 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="452" height="243" viewBox="0 0 452 243">
-  <rect x="0" y="0" width="452" height="243" fill="#FFFFFF" />
-  <g class="bcm-node bcm-node--parent" data-node-id="customer-management_0" data-node-name="Customer Management" data-node-depth="0" data-node-leaf="false" data-node-x="20" data-node-y="20" data-node-w="191" data-node-h="203">
-  <rect x="20" y="20" width="191" height="203" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
-  <text x="115.5" y="40" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="bold" fill="#000000">Customer Management</text>
+"<svg xmlns="http://www.w3.org/2000/svg" width="452" height="281" viewBox="0 0 452 281">
+  <rect x="0" y="0" width="452" height="281" fill="#FFFFFF" />
+  <g class="bcm-node bcm-node--parent" data-node-id="customer-management_0" data-node-name="Customer Management" data-node-depth="0" data-node-leaf="false" data-node-x="20" data-node-y="20" data-node-w="191" data-node-h="241">
+  <rect x="20" y="20" width="191" height="241" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
+  <text x="115.5" y="44" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="13" font-weight="bold" fill="#000000">Customer Management</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="customer-management/customer-analytics_2" data-node-name="Customer Analytics" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="60" data-node-w="167" data-node-h="45">
-  <rect x="32" y="60" width="167" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="115.5" y="82.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Customer Analytics</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="customer-management/customer-analytics_2" data-node-name="Customer Analytics" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="68" data-node-w="167" data-node-h="55">
+  <rect x="32" y="68" width="167" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="115.5" y="95.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Customer Analytics</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="customer-management/customer-onboarding_0" data-node-name="Customer Onboarding" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="113" data-node-w="167" data-node-h="45">
-  <rect x="32" y="113" width="167" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="115.5" y="135.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Customer Onboarding</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="customer-management/customer-onboarding_0" data-node-name="Customer Onboarding" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="131" data-node-w="167" data-node-h="55">
+  <rect x="32" y="131" width="167" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="115.5" y="158.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Customer Onboarding</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="customer-management/customer-support_1" data-node-name="Customer Support" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="166" data-node-w="167" data-node-h="45">
-  <rect x="32" y="166" width="167" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="115.5" y="188.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Customer Support</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="customer-management/customer-support_1" data-node-name="Customer Support" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="194" data-node-w="167" data-node-h="55">
+  <rect x="32" y="194" width="167" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="115.5" y="221.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Customer Support</text>
   </g>
-  <g class="bcm-node bcm-node--parent" data-node-id="product-management_1" data-node-name="Product Management" data-node-depth="0" data-node-leaf="false" data-node-x="241" data-node-y="20" data-node-w="191" data-node-h="150">
-  <rect x="241" y="20" width="191" height="150" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
-  <text x="336.5" y="40" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="bold" fill="#000000">Product Management</text>
+  <g class="bcm-node bcm-node--parent" data-node-id="product-management_1" data-node-name="Product Management" data-node-depth="0" data-node-leaf="false" data-node-x="241" data-node-y="20" data-node-w="191" data-node-h="178">
+  <rect x="241" y="20" width="191" height="178" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
+  <text x="336.5" y="44" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="13" font-weight="bold" fill="#000000">Product Management</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="product-management/product-development_0" data-node-name="Product Development" data-node-depth="1" data-node-leaf="true" data-node-x="253" data-node-y="60" data-node-w="167" data-node-h="45">
-  <rect x="253" y="60" width="167" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="336.5" y="82.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Product Development</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="product-management/product-development_0" data-node-name="Product Development" data-node-depth="1" data-node-leaf="true" data-node-x="253" data-node-y="68" data-node-w="167" data-node-h="55">
+  <rect x="253" y="68" width="167" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="336.5" y="95.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Product Development</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="product-management/product-marketing_1" data-node-name="Product Marketing" data-node-depth="1" data-node-leaf="true" data-node-x="253" data-node-y="113" data-node-w="167" data-node-h="45">
-  <rect x="253" y="113" width="167" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="336.5" y="135.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Product Marketing</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="product-management/product-marketing_1" data-node-name="Product Marketing" data-node-depth="1" data-node-leaf="true" data-node-x="253" data-node-y="131" data-node-w="167" data-node-h="55">
+  <rect x="253" y="131" width="167" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="336.5" y="158.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Product Marketing</text>
   </g>
 </svg>"
 `;
 
 exports[`golden snapshot tests > single-root renders consistently 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="231" height="243" viewBox="0 0 231 243">
-  <rect x="0" y="0" width="231" height="243" fill="#FFFFFF" />
-  <g class="bcm-node bcm-node--parent" data-node-id="it-operations_0" data-node-name="IT Operations" data-node-depth="0" data-node-leaf="false" data-node-x="20" data-node-y="20" data-node-w="191" data-node-h="203">
-  <rect x="20" y="20" width="191" height="203" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
-  <text x="115.5" y="40" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="bold" fill="#000000">IT Operations</text>
+"<svg xmlns="http://www.w3.org/2000/svg" width="231" height="281" viewBox="0 0 231 281">
+  <rect x="0" y="0" width="231" height="281" fill="#FFFFFF" />
+  <g class="bcm-node bcm-node--parent" data-node-id="it-operations_0" data-node-name="IT Operations" data-node-depth="0" data-node-leaf="false" data-node-x="20" data-node-y="20" data-node-w="191" data-node-h="241">
+  <rect x="20" y="20" width="191" height="241" rx="4" ry="4" fill="#D6E4F0" stroke="#CCCCCC" stroke-width="1" />
+  <text x="115.5" y="44" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="13" font-weight="bold" fill="#000000">IT Operations</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="it-operations/change-management_2" data-node-name="Change Management" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="60" data-node-w="167" data-node-h="45">
-  <rect x="32" y="60" width="167" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="115.5" y="82.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Change Management</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="it-operations/change-management_2" data-node-name="Change Management" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="68" data-node-w="167" data-node-h="55">
+  <rect x="32" y="68" width="167" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="115.5" y="95.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Change Management</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="it-operations/incident-management_1" data-node-name="Incident Management" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="113" data-node-w="167" data-node-h="45">
-  <rect x="32" y="113" width="167" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="115.5" y="135.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Incident Management</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="it-operations/incident-management_1" data-node-name="Incident Management" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="131" data-node-w="167" data-node-h="55">
+  <rect x="32" y="131" width="167" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="115.5" y="158.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Incident Management</text>
   </g>
-  <g class="bcm-node bcm-node--leaf" data-node-id="it-operations/service-desk_0" data-node-name="Service Desk" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="166" data-node-w="167" data-node-h="45">
-  <rect x="32" y="166" width="167" height="45" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
-  <text x="115.5" y="188.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="9" font-weight="normal" fill="#000000">Service Desk</text>
+  <g class="bcm-node bcm-node--leaf" data-node-id="it-operations/service-desk_0" data-node-name="Service Desk" data-node-depth="1" data-node-leaf="true" data-node-x="32" data-node-y="194" data-node-w="167" data-node-h="55">
+  <rect x="32" y="194" width="167" height="55" rx="4" ry="4" fill="#E8E8E8" stroke="#CCCCCC" stroke-width="1" />
+  <text x="115.5" y="221.5" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI" font-size="11" font-weight="normal" fill="#000000">Service Desk</text>
   </g>
 </svg>"
 `;

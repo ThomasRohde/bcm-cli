@@ -2,14 +2,14 @@ import type { LayoutOptions, ThemeConfig, FontConfig } from "./types.js";
 
 export const DEFAULT_PARENT_FONT: FontConfig = {
   name: "Segoe UI",
-  size: 9,
+  size: 13,
   style: "bold",
   color: null,
 };
 
 export const DEFAULT_LEAF_FONT: FontConfig = {
   name: "Segoe UI",
-  size: 9,
+  size: 11,
   style: "",
   color: null,
 };
@@ -17,7 +17,7 @@ export const DEFAULT_LEAF_FONT: FontConfig = {
 export const DEFAULT_LAYOUT_OPTIONS: LayoutOptions = {
   gap: 8,
   padding: 12,
-  headerHeight: 40,
+  headerHeight: 48,
   rootGap: 30,
   viewMargin: 20,
   aspectRatio: 1.6,
@@ -26,7 +26,7 @@ export const DEFAULT_LAYOUT_OPTIONS: LayoutOptions = {
   sortMode: "subtrees",
   minLeafWidth: 120,
   maxLeafWidth: 200,
-  leafHeight: 45,
+  leafHeight: 55,
 };
 
 export const DEFAULT_DEPTH_COLORS: string[] = [
@@ -57,6 +57,9 @@ export const DEFAULT_THEME: ThemeConfig = {
     headerHeight: DEFAULT_LAYOUT_OPTIONS.headerHeight,
     rootGap: DEFAULT_LAYOUT_OPTIONS.rootGap,
     viewMargin: DEFAULT_LAYOUT_OPTIONS.viewMargin,
+    minLeafWidth: DEFAULT_LAYOUT_OPTIONS.minLeafWidth,
+    maxLeafWidth: DEFAULT_LAYOUT_OPTIONS.maxLeafWidth,
+    leafHeight: DEFAULT_LAYOUT_OPTIONS.leafHeight,
   },
   display: {
     cornerRadius: 4,

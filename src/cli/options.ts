@@ -69,7 +69,7 @@ export const paddingOption = new Option(
 export const headerHeightOption = new Option(
   "--headerHeight <px>",
   "Header height in px",
-).default("40");
+).default("48");
 export const alignmentOption = new Option(
   "--alignment <mode>",
   "Row alignment: left, center, or right",
@@ -93,7 +93,7 @@ export const marginOption = new Option(
 export const leafHeightOption = new Option(
   "--leafHeight <px>",
   "Leaf node height",
-).default("45");
+).default("55");
 export const minLeafWidthOption = new Option(
   "--minLeafWidth <px>",
   "Minimum leaf width",
@@ -111,7 +111,7 @@ export const fontOption = new Option("--font <name>", "Font name").default(
 export const fontSizeOption = new Option(
   "--fontSize <pt>",
   "Font size in pt",
-).default("9");
+).default("11");
 
 // Output options
 export const outDirOption = new Option(

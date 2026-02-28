@@ -1,6 +1,6 @@
 # bcm-cli
 
-[![version](https://img.shields.io/badge/version-1.0.7-blue)](https://github.com/ThomasRohde/bcm-cli)
+[![version](https://img.shields.io/badge/version-1.0.8-blue)](https://github.com/ThomasRohde/bcm-cli)
 
 A CLI tool for rendering **Business Capability Maps** from JSON or CSV data into SVG, HTML, PNG, and PDF.
 
@@ -283,10 +283,10 @@ bcm render model.json \
   --alignment center \          # Alignment: "left", "center" (default), "right"
   --gap 8 \                     # Gap between siblings (px, default: 8)
   --padding 12 \                # Container padding (px, default: 12)
-  --headerHeight 40 \           # Container header height (px, default: 40)
+  --headerHeight 48 \           # Container header height (px, default: 48)
   --rootGap 30 \                # Gap between root nodes (px, default: 30)
   --margin 20 \                 # Viewport margin (px, default: 20)
-  --leafHeight 45 \             # Leaf node height (px, default: 45)
+  --leafHeight 55 \             # Leaf node height (px, default: 55)
   --minLeafWidth 120 \          # Minimum leaf width (px, default: 120)
   --maxLeafWidth 200 \          # Maximum leaf width (px, default: 200)
   --maxDepth 3                  # Max render depth (-1 = unlimited, default: -1)
@@ -311,15 +311,18 @@ bcm render model.json --theme my-theme.json
     "border": "#CCCCCC"
   },
   "typography": {
-    "parentFont": { "name": "Segoe UI", "size": 9, "style": "bold" },
-    "leafFont": { "name": "Segoe UI", "size": 9, "style": "" }
+    "parentFont": { "name": "Segoe UI", "size": 13, "style": "bold" },
+    "leafFont": { "name": "Segoe UI", "size": 11, "style": "" }
   },
   "spacing": {
     "gap": 8,
     "padding": 12,
-    "headerHeight": 40,
+    "headerHeight": 48,
     "rootGap": 30,
-    "viewMargin": 20
+    "viewMargin": 20,
+    "minLeafWidth": 120,
+    "maxLeafWidth": 200,
+    "leafHeight": 55
   },
   "display": {
     "cornerRadius": 4,
