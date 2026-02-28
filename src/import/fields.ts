@@ -168,3 +168,28 @@ export function findIdField(
   if (override) return override;
   return firstMatchingKey(obj, ID_CANDIDATES);
 }
+
+// ---------------------------------------------------------------------------
+// Level field
+// ---------------------------------------------------------------------------
+
+export const LEVEL_CANDIDATES = [
+  "level",
+  "Level",
+  "L",
+  "depth",
+  "tier",
+  "hierarchy_level",
+  "hierarchyLevel",
+];
+
+/**
+ * Detect the field that holds a hierarchy level indicator (e.g., L1/L2/L3 or 1/2/3).
+ */
+export function findLevelField(
+  obj: Record<string, unknown>,
+  override?: string,
+): string | null {
+  if (override) return override;
+  return firstMatchingKey(obj, LEVEL_CANDIDATES);
+}

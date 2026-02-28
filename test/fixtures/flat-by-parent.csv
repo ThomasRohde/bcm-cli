@@ -1,0 +1,8 @@
+id,name,description,parent
+root,Enterprise,Root capability,
+cm,Customer Management,Managing customers,root
+co,Customer Onboarding,Onboarding new customers,cm
+cr,Customer Retention,Retaining existing customers,cm
+pm,Product Management,Managing products,root
+pd,Product Development,Developing new products,pm
+pp,Product Pricing,Setting product prices,pm

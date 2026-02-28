@@ -1,0 +1,4 @@
+name,description,parent
+Enterprise,"The root capability, covering all domains",
+"Customer Management","Acquiring, retaining, and managing customer relationships",Enterprise
+"Customer Onboarding","Registration, verification, and activation of new accounts",Customer Management

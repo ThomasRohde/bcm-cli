@@ -14,7 +14,7 @@ import { DEFAULT_LAYOUT_OPTIONS } from "../../core/defaults.js";
 import { successEnvelope, errorEnvelope } from "../envelope.js";
 import { BcmAppError, ErrorCode } from "../errors.js";
 import { readInput } from "../../import/reader.js";
-import { importJson, filterRoots, summarizeModel } from "../../import/index.js";
+import { importData, filterRoots, summarizeModel } from "../../import/index.js";
 import { writeStderrVerbose } from "../output.js";
 import { layoutTrees } from "../../layout/index.js";
 import { renderSvg } from "../../render/svg-renderer.js";
@@ -126,7 +126,7 @@ export async function runRender(
     writeStderrVerbose("[render] Reading input...");
     const raw = readInput(importOpts.stdin ? undefined : inputPath);
     writeStderrVerbose("[render] Parsing and normalizing...");
-    const importResult = importJson(raw, importOpts);
+    const importResult = importData(raw, importOpts, importOpts.stdin ? undefined : inputPath);
     let roots = importResult.roots;
     const warnings = [...importResult.warnings];
 

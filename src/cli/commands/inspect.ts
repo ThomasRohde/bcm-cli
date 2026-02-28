@@ -2,7 +2,7 @@ import type { Envelope, InspectResult, ImportOptions } from "../../core/types.js
 import { successEnvelope, errorEnvelope } from "../envelope.js";
 import { BcmAppError } from "../errors.js";
 import { readInput } from "../../import/reader.js";
-import { importJson, filterRoots, summarizeModel } from "../../import/index.js";
+import { importData, filterRoots, summarizeModel } from "../../import/index.js";
 
 export function runInspect(
   inputPath: string | undefined,
@@ -12,7 +12,7 @@ export function runInspect(
   const start = Date.now();
   try {
     const raw = readInput(importOpts.stdin ? undefined : inputPath);
-    const result = importJson(raw, importOpts);
+    const result = importData(raw, importOpts, importOpts.stdin ? undefined : inputPath);
     let roots = result.roots;
     const warnings = [...result.warnings];
 

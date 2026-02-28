@@ -18,6 +18,7 @@ export interface DetectedFields {
   children: string | null;
   parent: string | null;
   id: string | null;
+  level?: string | null;
 }
 
 export interface ModelSummary {
@@ -137,6 +138,8 @@ export interface ImportOptions {
   unwrap?: string;
   stdin?: boolean;
   root?: string[];
+  format?: "json" | "csv" | "tsv";
+  levelField?: string;
 }
 
 export interface FlagMeta {

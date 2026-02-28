@@ -27,8 +27,16 @@ export const unwrapOption = new Option(
 );
 export const stdinOption = new Option(
   "--stdin",
-  "Read JSON from stdin instead of file",
+  "Read input from stdin instead of file",
 ).default(false);
+export const formatOption = new Option(
+  "--format <type>",
+  "Input format (auto-detected from extension if omitted)",
+).choices(["json", "csv", "tsv"]);
+export const levelFieldOption = new Option(
+  "--levelField <key>",
+  "Override auto-detected level/depth field for CSV hierarchy inference",
+);
 
 // Model options
 export const maxDepthOption = new Option(

@@ -1,0 +1,8 @@
+id,name,level,description
+enterprise,Enterprise,L1,Root enterprise capability
+cm,Customer Management,L2,Managing customers
+co,Customer Onboarding,L3,Onboarding new customers
+cr,Customer Retention,L3,Retaining existing customers
+pm,Product Management,L2,Managing products
+pd,Product Development,L3,Developing new products
+pp,Product Pricing,L3,Setting product prices

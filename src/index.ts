@@ -14,7 +14,8 @@ import { runRender } from "./cli/commands/render.js";
 import type { ImportOptions, ExportOptions, LayoutOptions } from "./core/types.js";
 import {
   nameFieldOption, descFieldOption, childrenFieldOption, parentFieldOption, idFieldOption,
-  unwrapOption, stdinOption, maxDepthOption, sortOption, rootOption,
+  unwrapOption, stdinOption, formatOption, levelFieldOption,
+  maxDepthOption, sortOption, rootOption,
   gapOption, paddingOption, headerHeightOption, alignmentOption, aspectRatioOption,
   rootGapOption, marginOption, leafHeightOption, minLeafWidthOption, maxLeafWidthOption,
   themeOption, fontOption, fontSizeOption, outDirOption, svgOption, noSvgOption,
@@ -25,11 +26,22 @@ import {
 const program = new Command();
 const agentMode = isAgentMode();
 const machineModeHelp = `
+Input formats (auto-detected from file extension):
+
+  .json    JSON (nested, flat, or simple schemas — see below)
+  .csv     Comma-separated values
+  .tsv     Tab-separated values
+  Use --format to override auto-detection (required for stdin with CSV/TSV).
+
 Input JSON schemas (auto-detected):
 
   nested   Array of objects with a children field (e.g. children, subCapabilities)
   flat     Array of objects with a parent reference field (e.g. parent_id, parentName)
   simple   Array of objects with just a name — rendered as flat leaf nodes
+
+CSV/TSV hierarchy: If the CSV has a parent column, it is treated as flat schema.
+If it has a level column (e.g. L1/L2/L3 or 1/2/3), hierarchy is inferred automatically.
+Otherwise, all rows become flat leaf nodes.
 
 Fields are auto-detected. Override with --nameField, --childrenField, etc.
 Run "bcm skill" first for BCM modelling guidance.
@@ -74,6 +86,8 @@ function addImportOptions(cmd: Command): Command {
     .addOption(idFieldOption)
     .addOption(unwrapOption)
     .addOption(stdinOption)
+    .addOption(formatOption)
+    .addOption(levelFieldOption)
     .addOption(rootOption);
 }
 
@@ -86,6 +100,8 @@ function parseImportOpts(opts: Record<string, unknown>): ImportOptions {
     idField: opts.idField as string | undefined,
     unwrap: opts.unwrap as string | undefined,
     stdin: opts.stdin as boolean | undefined,
+    format: opts.format as ImportOptions["format"],
+    levelField: opts.levelField as string | undefined,
     root: opts.root as string[] | undefined,
   };
 }

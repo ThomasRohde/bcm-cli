@@ -16,9 +16,12 @@ import {
   findChildrenField,
   findParentField,
   findIdField,
+  findLevelField,
 } from "./fields.js";
 import { normalizeItems } from "./normalize.js";
 import { validateTree } from "./validate.js";
+import { parseCsv, inferParentsFromLevels } from "./csv-parser.js";
+import { detectFormat } from "./format.js";
 
 // Re-export individual modules for direct access
 export { readInput } from "./reader.js";
@@ -31,9 +34,12 @@ export {
   findChildrenField,
   findParentField,
   findIdField,
+  findLevelField,
 } from "./fields.js";
 export { normalizeNode, buildTreeFromFlat, normalizeItems } from "./normalize.js";
 export { validateTree } from "./validate.js";
+export { parseCsv, inferParentsFromLevels } from "./csv-parser.js";
+export { detectFormat } from "./format.js";
 
 // ---------------------------------------------------------------------------
 // Summary helpers
@@ -215,4 +221,115 @@ export function importJson(
     summary,
     warnings: allWarnings,
   };
+}
+
+// ---------------------------------------------------------------------------
+// CSV/TSV import pipeline
+// ---------------------------------------------------------------------------
+
+function importCsv(
+  raw: string,
+  importOptions: ImportOptions,
+  dialect: "csv" | "tsv",
+): ImportResult {
+  const allWarnings: BcmWarning[] = [];
+
+  // 1. Parse CSV/TSV into row objects
+  const items = parseCsv(raw, dialect);
+
+  if (items.length === 0) {
+    throw new BcmAppError(
+      ErrorCode.ERR_VALIDATION_EMPTY_INPUT,
+      "No capability items found in CSV input",
+    );
+  }
+
+  // 2. Detect fields from first row
+  const sample = items[0] as Record<string, unknown>;
+  const fields: DetectedFields = {
+    name: findNameField(sample, importOptions.nameField),
+    description: findDescField(sample, importOptions.descField),
+    children: null, // CSV rows never have embedded children
+    parent: findParentField(sample, importOptions.parentField),
+    id: findIdField(sample, importOptions.idField),
+    level: findLevelField(sample, importOptions.levelField),
+  };
+
+  if (fields.name === null) {
+    throw new BcmAppError(
+      ErrorCode.ERR_VALIDATION_NO_NAME_FIELD,
+      "No name field detected in CSV input",
+      { sampleKeys: Object.keys(sample) },
+    );
+  }
+
+  // 3. Infer hierarchy from level column if no parent column exists
+  if (fields.parent === null && fields.level != null) {
+    inferParentsFromLevels(
+      items as Record<string, string | number | boolean>[],
+      fields.level as string,
+      fields.name,
+      fields.id,
+    );
+    // The inferred parent field acts as the parent column
+    fields.parent = "__inferred_parent";
+  }
+
+  // 4. Detect schema — CSV with parent is "flat", otherwise "simple"
+  const schema: SchemaType = fields.parent ? "flat" : "simple";
+
+  // 5. Normalize using existing pipeline
+  const { roots, warnings: normalizeWarnings } = normalizeItems(
+    items as Record<string, unknown>[],
+    schema,
+    fields,
+  );
+  allWarnings.push(...normalizeWarnings);
+
+  // 6. Validate
+  const { errors: validationErrors, warnings: validationWarnings } =
+    validateTree(roots);
+  allWarnings.push(...validationWarnings);
+
+  if (validationErrors.length > 0) {
+    const first = validationErrors[0];
+    throw new BcmAppError(
+      first.code as ErrorCode,
+      first.message,
+      first.details as Record<string, unknown> | undefined,
+    );
+  }
+
+  // 7. Summarize
+  const summary = summarizeModel(roots);
+
+  return {
+    roots,
+    schema,
+    fields,
+    summary,
+    warnings: allWarnings,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Unified entry point
+// ---------------------------------------------------------------------------
+
+/**
+ * Import data from JSON, CSV, or TSV. Detects format from file extension
+ * unless explicitly specified via `importOptions.format`.
+ */
+export function importData(
+  raw: string,
+  importOptions: ImportOptions = {},
+  filePath?: string,
+): ImportResult {
+  const format = importOptions.format ?? detectFormat(filePath);
+
+  if (format === "csv" || format === "tsv") {
+    return importCsv(raw, importOptions, format);
+  }
+
+  return importJson(raw, importOptions);
 }
