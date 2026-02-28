@@ -9,13 +9,13 @@ Designed to be agent-friendly: all output is structured JSON, making it easy to 
 ## Installation
 
 ```bash
-npm install -g bcm-cli
+npm install -g @trohde/bcm-cli
 ```
 
 Or use directly with npx:
 
 ```bash
-npx bcm-cli render capabilities.json --outDir ./out
+npx @trohde/bcm-cli render capabilities.json --outDir ./out
 ```
 
 ### Optional: PNG/PDF Export

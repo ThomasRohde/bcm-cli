@@ -22,8 +22,8 @@ describe("skill command", () => {
     runSkill();
     const output = writeSpy.mock.calls[0][0] as string;
     expect(output).toContain("## Purpose");
-    expect(output).toContain("## Capability description template");
-    expect(output).toContain("## Agentic workflow");
+    expect(output).toContain("## Description template");
+    expect(output).toContain("## Workflow");
   });
 
   it("contains MECE audit section", () => {
@@ -32,9 +32,9 @@ describe("skill command", () => {
     expect(output).toContain("## MECE audit");
   });
 
-  it("contains common anti-patterns", () => {
+  it("contains output format section", () => {
     runSkill();
     const output = writeSpy.mock.calls[0][0] as string;
-    expect(output).toContain("## Common anti-patterns");
+    expect(output).toContain("## Output format");
   });
 });
