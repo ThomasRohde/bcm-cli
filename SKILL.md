@@ -20,19 +20,19 @@ Complete example — a small model as a single CSV file:
 
 ```csv
 id,name,level,category,description
-acme,Acme Corp,L1,supporting,"**Scope:** Root capability for Acme Corp.
+acme,Acme Corp,L1,supporting,"Root capability for Acme Corp.
 
 **Includes:** Customer management, product management, financial management.
 
 **Excludes:** External partner operations."
-acme/customer-management,Customer Management,L2,core,"**Scope:** Acquire, retain, and manage customer relationships.
+acme/customer-management,Customer Management,L2,core,"Acquire, retain, and manage customer relationships.
 
 **Includes:** Onboarding, retention, data management.
 
 **Excludes:** Billing (see Financial Management).
 
 **Business outcomes:** Higher customer lifetime value, reduced churn rate, improved satisfaction scores."
-acme/customer-management/customer-onboarding,Customer Onboarding,L3,core,"**Scope:** Register, verify, and activate new customer accounts across all channels.
+acme/customer-management/customer-onboarding,Customer Onboarding,L3,core,"Register, verify, and activate new customer accounts across all channels.
 
 **Includes:** Identity verification, account creation, welcome communications, initial product setup.
 
@@ -43,14 +43,14 @@ acme/customer-management/customer-onboarding,Customer Onboarding,L3,core,"**Scop
 **Key information:** Customer applications, identity documents, account records, product eligibility rules."
 ```
 
-Description detail increases with depth: L1 has Scope/Includes/Excludes, L2 adds Business outcomes, L3 (leaf) has all five sections. Separate every section with a blank line.
+Description detail increases with depth: L1 has scope + Includes + Excludes, L2 adds Business outcomes, L3 (leaf) has all sections. Separate every section with a blank line.
 
 ## Description template
 
 To describe a capability, use this template in the `description` column (quote the CSV field):
 
 ```markdown
-**Scope:** <1–2 sentences defining boundaries and purpose.>
+<1–2 sentences defining boundaries and purpose.>
 
 **Includes:** <Comma-separated list of activities/sub-domains in scope.>
 
@@ -67,12 +67,14 @@ To describe a capability, use this template in the `description` column (quote t
 |-------|-------------------|----------|
 | L1 | Scope + Includes + Excludes | Abstract groupings — keep brief. |
 | L2 | Scope + Includes + Excludes + Business outcomes | Add 2–3 measurable outcomes. |
-| L3 (leaf) | All 5 sections | Leaf nodes are concrete capabilities — fully specify each section (2–4 sentences). |
+| L3 (leaf) | All sections | Leaf nodes are concrete capabilities — fully specify each section (2–4 sentences). |
+
+**Minimum leaf counts:** Every L2 domain must decompose into **at least 3 L3 leaves** (typically 4–7). A domain with fewer than 3 children is either too narrow (merge it into a sibling) or under-decomposed (add missing capabilities). Across a full model, expect roughly 3–5× as many L3 nodes as L2 domains.
 
 **L1 example — "Customer Management" (domain grouping):**
 
 ```markdown
-**Scope:** The ability to acquire, retain, and manage relationships with customers across all channels.
+The ability to acquire, retain, and manage relationships with customers across all channels.
 
 **Includes:** Customer onboarding, customer retention, customer data management, customer feedback.
 
@@ -82,7 +84,7 @@ To describe a capability, use this template in the `description` column (quote t
 **L3 example — "Order Validation" (leaf):**
 
 ```markdown
-**Scope:** Verify order completeness, pricing accuracy, and customer eligibility before fulfilment. Ensures only valid orders proceed to downstream fulfilment and payment processes.
+Verify order completeness, pricing accuracy, and customer eligibility before fulfilment. Ensures only valid orders proceed to downstream fulfilment and payment processes.
 
 **Includes:** Field completeness checks, price verification, credit-hold screening, address validation, SKU availability confirmation.
 
@@ -107,7 +109,7 @@ Run these checks before final output:
 
 1. **Clarify** in 3 bullets: scope boundary, intended use (strategy / portfolio / heatmap), depth required.
 2. **Draft L1 skeleton** — write the root row (named after the area being modelled), then 7–10 L2 domain rows beneath it. Fewer than 7 collapses distinctions; more than 12 fragments the model. Group domains via the `category` column (`core`, `strategic`, `supporting`). Lock naming conventions before going deeper.
-3. **Fill L2 then L3** — write the description for each row per the depth rules table. Limit depth to 3–4 levels unless there is a concrete decision-making need for more.
+3. **Fill L2 then L3** — decompose every L2 into 4–7 L3 leaves before writing descriptions. If a domain yields fewer than 3 leaves, merge it into a sibling; if more than 10, split the domain. Write descriptions per the depth rules table. Limit depth to 3–4 levels unless there is a concrete decision-making need for more.
 4. **Run MECE audit** (all 5 checks). Revise until clean, then output the final CSV.
 
 ## Workflow — multi-agent swarm (>30 capabilities)
@@ -124,14 +126,14 @@ Use a **map-reduce pattern**: master agent orchestrates, sub-agents each own one
 
 Spawn one sub-agent per domain. Each receives: domain name, scope contract, description template, depth target, and node cap. Sub-agents output at L2+ levels (root is L1 — sub-agents must not create L1 rows).
 
-**Pass 1 — Structure:** Generate the full hierarchy with **Scope-only** descriptions. Output as CSV plus boundary notes (3–5 in-scope items, 3–5 out-of-scope items with owning domain). Do not write remaining description sections yet.
+**Pass 1 — Structure:** Generate the full hierarchy with **scope-only** descriptions. Output as CSV plus boundary notes (3–5 in-scope items, 3–5 out-of-scope items with owning domain). Do not write remaining description sections yet.
 
 ```csv
 id,name,level,category,description
-customer-management,Customer Management,L2,core,"**Scope:** Acquire, retain, and manage customer relationships."
-customer-management/customer-onboarding,Customer Onboarding,L3,core,"**Scope:** Register, verify, and activate new customer accounts."
-customer-management/customer-retention,Customer Retention,L3,core,"**Scope:** Maintain and strengthen existing customer relationships."
-customer-management/customer-retention/churn-prevention,Churn Prevention,L4,core,"**Scope:** Identify at-risk customers and execute retention interventions."
+customer-management,Customer Management,L2,core,"Acquire, retain, and manage customer relationships."
+customer-management/customer-onboarding,Customer Onboarding,L3,core,"Register, verify, and activate new customer accounts."
+customer-management/customer-retention,Customer Retention,L3,core,"Maintain and strengthen existing customer relationships."
+customer-management/customer-retention/churn-prevention,Churn Prevention,L4,core,"Identify at-risk customers and execute retention interventions."
 ```
 
 **Pass 2 — Enrich:** After skeleton acceptance, fill remaining description sections per depth rules. Do not alter hierarchy or names — only add description content. Separate each section with a blank line.
@@ -144,7 +146,7 @@ Concatenate sub-agent CSVs under a single header. Prepend a root row (L1). Then 
 2. **MECE audit** — all 5 checks applied across the full merged model.
 3. **Cross-domain dedup** — flag capability names with >70% similarity across domains. Resolve by choosing one home and updating the other domain's Excludes.
 4. **Boundary reconciliation** — verify every sub-agent's out-of-scope items were claimed by another domain. Flag gaps and overlaps.
-5. **Description completeness** — verify leaf nodes have all 5 template sections, L2 has 4, L1 has 3.
+5. **Description completeness** — verify leaf nodes have scope + all 4 labelled sections, L2 has scope + 3, L1 has scope + 2.
 
 Send targeted revision requests for flagged issues. Repeat until clean.
 
