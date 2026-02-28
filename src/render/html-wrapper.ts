@@ -139,15 +139,10 @@ export function wrapHtml(
     min-height: 100vh;
     color: var(--bcm-text);
     font-family: var(--bcm-font);
-    background:
-      radial-gradient(circle at 10% 20%, rgba(191, 219, 254, 0.5), transparent 40%),
-      radial-gradient(circle at 90% 10%, rgba(253, 230, 138, 0.4), transparent 40%),
-      radial-gradient(circle at 50% 80%, rgba(221, 214, 254, 0.5), transparent 50%),
-      linear-gradient(135deg, var(--bcm-bg-1), var(--bcm-bg-2));
-    background-attachment: fixed;
+    background: #ffffff;
   }
   .bcm-shell {
-    width: min(1600px, 100%);
+    width: 100%;
     margin: 0 auto;
     min-height: 100vh;
     padding: 20px;
