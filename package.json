@@ -1,6 +1,6 @@
 {
   "name": "@trohde/bcm-cli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Agent-first CLI for rendering Business Capability Maps from JSON to SVG, HTML, PNG, and PDF",
   "type": "module",
   "main": "./dist/index.js",
