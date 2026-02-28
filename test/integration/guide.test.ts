@@ -16,6 +16,7 @@ describe("guide command", () => {
     expect(result.commands).toHaveProperty("bcm.validate");
     expect(result.commands).toHaveProperty("bcm.inspect");
     expect(result.commands).toHaveProperty("bcm.guide");
+    expect(result.commands).toHaveProperty("bcm.skill");
   });
 
   it("marks input args as optional to support --stdin workflows", () => {

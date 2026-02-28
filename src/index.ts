@@ -7,6 +7,7 @@ import { errorEnvelope } from "./cli/envelope.js";
 import { BcmAppError } from "./cli/errors.js";
 import { applyHumanHelp } from "./cli/human-help.js";
 import { runGuide } from "./cli/commands/guide.js";
+import { runSkill } from "./cli/commands/skill.js";
 import { runInspect } from "./cli/commands/inspect.js";
 import { runValidate } from "./cli/commands/validate.js";
 import { runRender } from "./cli/commands/render.js";
@@ -31,6 +32,7 @@ Input JSON schemas (auto-detected):
   simple   Array of objects with just a name — rendered as flat leaf nodes
 
 Fields are auto-detected. Override with --nameField, --childrenField, etc.
+Run "bcm skill" first for BCM modelling guidance.
 Run "bcm guide" for full schema documentation with examples.
 `;
 
@@ -52,6 +54,14 @@ program
     const { envelope, exitCode } = runGuide(requestId);
     writeEnvelope(envelope);
     process.exit(exitCode);
+  });
+
+// --- skill ---
+program
+  .command("skill")
+  .description("Output BCM modelling guidance (agent context loading)")
+  .action(() => {
+    runSkill();
   });
 
 // --- shared option helper ---

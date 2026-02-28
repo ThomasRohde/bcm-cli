@@ -89,6 +89,12 @@ export function runGuide(requestId: string): { envelope: Envelope<unknown>; exit
         mutates: false,
         flags: {},
       },
+      "bcm.skill": {
+        description: "Output BCM modelling guidance as raw markdown (for agent context loading)",
+        args: [],
+        mutates: false,
+        flags: {},
+      },
     },
     examples: [
       { command: "bcm render data.json --outDir out --svg", description: "Render a capability map to SVG" },
@@ -97,6 +103,7 @@ export function runGuide(requestId: string): { envelope: Envelope<unknown>; exit
       { command: "bcm inspect data.json", description: "Detect schema and field mappings" },
       { command: "cat data.json | bcm render --stdin --outDir out --svg", description: "Pipe JSON via stdin" },
       { command: "bcm render data.json --root \"Customer Management\" --outDir out --svg", description: "Render a specific root subtree" },
+      { command: "bcm skill", description: "Load BCM modelling guidance into agent context" },
     ],
     error_codes: errorCodes,
     defaults: {

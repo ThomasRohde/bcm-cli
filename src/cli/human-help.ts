@@ -153,6 +153,7 @@ function examplesFor(path: string): string[] {
         "bcm render model.json --outDir out --svg",
         "bcm validate model.json",
         "bcm inspect model.json --root \"Customer Management\"",
+        "bcm skill",
       ];
     case "bcm render":
       return [
@@ -293,7 +294,8 @@ class HumanHelp extends Help {
       lines.push("  flat:   array with parent references");
       lines.push("  simple: flat list of names");
       lines.push("");
-      lines.push(this.dim('Tip: run "bcm guide" for full machine-readable command metadata.'));
+      lines.push(this.dim('Tip: run "bcm skill" for capability modelling guidance.'));
+      lines.push(this.dim('     run "bcm guide" for full machine-readable command metadata.'));
     }
 
     return lines.join("\n");

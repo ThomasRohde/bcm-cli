@@ -2,6 +2,7 @@ import { defineConfig } from "tsup";
 import { readFileSync } from "fs";
 
 const { version } = JSON.parse(readFileSync("./package.json", "utf-8"));
+const skillMd = readFileSync("./SKILL.md", "utf-8");
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -13,6 +14,7 @@ export default defineConfig({
   noExternal: ["commander", "opentype.js"],
   define: {
     __VERSION__: JSON.stringify(version),
+    __SKILL_MD__: JSON.stringify(skillMd),
   },
   banner: {
     js: `#!/usr/bin/env node
