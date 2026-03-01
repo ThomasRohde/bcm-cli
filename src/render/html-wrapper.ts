@@ -101,9 +101,11 @@ function buildNodePayload(nodes: HtmlNodeMeta[]): HtmlNodePayload[] {
   });
 }
 
-export function wrapConfluenceHtml(fullHtml: string): string {
+export function wrapConfluenceHtml(fullHtml: string, mapHeight: number): string {
   const base64 = Buffer.from(fullHtml, "utf-8").toString("base64");
-  return `<div class="bcm-confluence-wrapper" style="width:100%;height:800px;position:relative;">
+  // Shell padding 40 + toolbar ~68 + grid gap 16 + stage border 2 + breathing room ~24 = 150
+  const iframeHeight = mapHeight + 150;
+  return `<div class="bcm-confluence-wrapper" style="width:100%;height:${iframeHeight}px;position:relative;">
 <script>
 (function(){
   var wrapper = document.currentScript.parentElement;

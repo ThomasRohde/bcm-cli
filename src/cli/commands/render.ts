@@ -224,7 +224,9 @@ export async function runRender(
       }
 
       if (exportOpts.html) {
-        const finalHtml = exportOpts.confluence ? wrapConfluenceHtml(html) : html;
+        const finalHtml = exportOpts.confluence
+          ? wrapConfluenceHtml(html, layoutResult.totalHeight)
+          : html;
         const htmlPath = join(exportOpts.outDir, `${baseName}.html`);
         atomicWrite(htmlPath, finalHtml);
         artefacts.push({
