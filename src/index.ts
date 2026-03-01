@@ -19,7 +19,7 @@ import {
   gapOption, paddingOption, headerHeightOption, alignmentOption, aspectRatioOption,
   rootGapOption, marginOption, leafHeightOption, minLeafWidthOption, maxLeafWidthOption,
   themeOption, fontOption, fontSizeOption, outDirOption, svgOption, noSvgOption,
-  htmlOption, pngOption, pdfOption, scaleOption, pageSizeOption, pdfMarginOption,
+  htmlOption, confluenceOption, pngOption, pdfOption, scaleOption, pageSizeOption, pdfMarginOption,
   dryRunOption, quietOption, verboseOption, outputOption,
 } from "./cli/options.js";
 
@@ -162,6 +162,7 @@ addImportOptions(renderCmd)
   .addOption(svgOption)
   .addOption(noSvgOption)
   .addOption(htmlOption)
+  .addOption(confluenceOption)
   .addOption(pngOption)
   .addOption(pdfOption)
   .addOption(scaleOption)
@@ -207,16 +208,18 @@ addImportOptions(renderCmd)
 
     const fontName = isCliOverride("font") ? (opts.font as string | undefined) : undefined;
     const fontSize = isCliOverride("fontSize") ? (opts.fontSize as string | undefined) : undefined;
+    const confluence = (opts.confluence ?? false) as boolean;
     const exportOpts: ExportOptions = {
       outDir: opts.outDir as string,
       svg: opts.svg as boolean,
-      html: (opts.html ?? false) as boolean,
+      html: confluence || ((opts.html ?? false) as boolean),
       png: (opts.png ?? false) as boolean,
       pdf: (opts.pdf ?? false) as boolean,
       scale: parseFloat(opts.scale as string),
       pageSize: opts.pageSize as string,
       pdfMargin: opts.pdfMargin as string,
       dryRun: (opts.dryRun ?? false) as boolean,
+      confluence,
     };
     const { envelope, exitCode } = await runRender(
       input,

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { wrapHtml, type HtmlNodeMeta } from "../../../src/render/html-wrapper.js";
+import { wrapHtml, wrapConfluenceHtml, type HtmlNodeMeta } from "../../../src/render/html-wrapper.js";
 import { DEFAULT_THEME } from "../../../src/core/defaults.js";
 
 describe("wrapHtml", () => {
@@ -59,5 +59,55 @@ describe("wrapHtml", () => {
   it("uses device-width viewport for responsive output", () => {
     const html = wrapHtml(svg, 800, 600, DEFAULT_THEME, nodes);
     expect(html).toContain('width=device-width');
+  });
+});
+
+describe("wrapConfluenceHtml", () => {
+  const fullHtml = '<!DOCTYPE html><html><head></head><body><p>Hello</p></body></html>';
+
+  it("wraps content in div with script", () => {
+    const result = wrapConfluenceHtml(fullHtml);
+    expect(result).toContain('class="bcm-confluence-wrapper"');
+    expect(result).toContain("<script>");
+    expect(result).toContain("iframe");
+  });
+
+  it("base64-encodes the full HTML", () => {
+    const result = wrapConfluenceHtml(fullHtml);
+    const expected = Buffer.from(fullHtml, "utf-8").toString("base64");
+    expect(result).toContain(expected);
+  });
+
+  it("does not contain raw source HTML tags", () => {
+    const result = wrapConfluenceHtml(fullHtml);
+    expect(result).not.toContain("<!DOCTYPE html>");
+    expect(result).not.toContain("<html>");
+    expect(result).not.toContain("</html>");
+  });
+
+  it("includes noscript fallback", () => {
+    const result = wrapConfluenceHtml(fullHtml);
+    expect(result).toContain("<noscript>");
+    expect(result).toContain("JavaScript is required");
+  });
+
+  it("round-trips correctly through base64", () => {
+    const result = wrapConfluenceHtml(fullHtml);
+    const match = result.match(/atob\("([^"]+)"\)/);
+    expect(match).not.toBeNull();
+    const decoded = Buffer.from(match![1], "base64").toString("utf-8");
+    expect(decoded).toBe(fullHtml);
+  });
+
+  it("includes sandbox attribute on iframe", () => {
+    const result = wrapConfluenceHtml(fullHtml);
+    expect(result).toContain('sandbox');
+    expect(result).toContain('allow-scripts');
+    expect(result).toContain('allow-same-origin');
+  });
+
+  it("uses 800px default height", () => {
+    const result = wrapConfluenceHtml(fullHtml);
+    expect(result).toContain("height:800px");
   });
 });

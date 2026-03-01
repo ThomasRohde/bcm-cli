@@ -67,6 +67,7 @@ export function runGuide(requestId: string): { envelope: Envelope<unknown>; exit
           "--scale": { type: "string", default: "2", description: "PNG pixel density scale" },
           "--pageSize": { type: "string", default: "A4", description: "PDF page size (A4, Letter, WxH)" },
           "--pdfMargin": { type: "string", default: "10mm", description: "PDF margins" },
+          "--confluence": { type: "boolean", default: false, description: "Output Confluence-compatible HTML for HTML macro embedding (implies --html)" },
           "--dry-run": { type: "boolean", default: false, description: "Compute layout without writing files" },
           ...DIAGNOSTIC_FLAGS,
         },

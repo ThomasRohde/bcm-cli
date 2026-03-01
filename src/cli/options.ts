@@ -123,6 +123,10 @@ export const noSvgOption = new Option("--no-svg", "Skip SVG output");
 export const htmlOption = new Option("--html", "Output HTML file").default(
   false,
 );
+export const confluenceOption = new Option(
+  "--confluence",
+  "Output Confluence-compatible HTML for HTML macro embedding (implies --html)",
+).default(false);
 export const pngOption = new Option("--png", "Output PNG file").default(false);
 export const pdfOption = new Option("--pdf", "Output PDF file").default(false);
 export const scaleOption = new Option(

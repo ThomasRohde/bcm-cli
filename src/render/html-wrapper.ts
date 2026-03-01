@@ -101,6 +101,26 @@ function buildNodePayload(nodes: HtmlNodeMeta[]): HtmlNodePayload[] {
   });
 }
 
+export function wrapConfluenceHtml(fullHtml: string): string {
+  const base64 = Buffer.from(fullHtml, "utf-8").toString("base64");
+  return `<div class="bcm-confluence-wrapper" style="width:100%;height:800px;position:relative;">
+<script>
+(function(){
+  var wrapper = document.currentScript.parentElement;
+  var iframe = document.createElement("iframe");
+  iframe.setAttribute("sandbox", "allow-scripts allow-same-origin");
+  iframe.style.cssText = "width:100%;height:100%;border:none;";
+  wrapper.appendChild(iframe);
+  var doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(atob("${base64}"));
+  doc.close();
+})();
+</script>
+<noscript><p>JavaScript is required to display this capability map.</p></noscript>
+</div>`;
+}
+
 export function wrapHtml(
   svg: string,
   width: number,

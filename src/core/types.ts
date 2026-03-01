@@ -162,6 +162,7 @@ export interface ExportOptions {
   pageSize: string;
   pdfMargin: string;
   dryRun: boolean;
+  confluence: boolean;
 }
 
 export type MeasureTextFn = (text: string) => number;

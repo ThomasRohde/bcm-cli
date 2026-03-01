@@ -18,7 +18,7 @@ import { importData, filterRoots, summarizeModel } from "../../import/index.js";
 import { writeStderrVerbose } from "../output.js";
 import { layoutTrees } from "../../layout/index.js";
 import { renderSvg } from "../../render/svg-renderer.js";
-import { wrapHtml, type HtmlNodeMeta } from "../../render/html-wrapper.js";
+import { wrapHtml, wrapConfluenceHtml, type HtmlNodeMeta } from "../../render/html-wrapper.js";
 import { resolveTheme } from "../../render/theme.js";
 import { atomicWrite } from "../../export/file-writer.js";
 import { createStubMeasurer, createFontMeasurer } from "../../fonts/metrics.js";
@@ -224,12 +224,13 @@ export async function runRender(
       }
 
       if (exportOpts.html) {
+        const finalHtml = exportOpts.confluence ? wrapConfluenceHtml(html) : html;
         const htmlPath = join(exportOpts.outDir, `${baseName}.html`);
-        atomicWrite(htmlPath, html);
+        atomicWrite(htmlPath, finalHtml);
         artefacts.push({
           type: "html",
           path: htmlPath,
-          bytes: Buffer.byteLength(html, "utf-8"),
+          bytes: Buffer.byteLength(finalHtml, "utf-8"),
         });
       }
 
