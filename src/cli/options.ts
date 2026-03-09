@@ -129,6 +129,7 @@ export const confluenceOption = new Option(
 ).default(false);
 export const pngOption = new Option("--png", "Output PNG file").default(false);
 export const pdfOption = new Option("--pdf", "Output PDF file").default(false);
+export const jsonExportOption = new Option("--json", "Output JSON file with normalized model and layout data").default(false);
 export const scaleOption = new Option(
   "--scale <float>",
   "PNG pixel density scale",

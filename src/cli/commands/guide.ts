@@ -64,6 +64,7 @@ export function runGuide(requestId: string): { envelope: Envelope<unknown>; exit
           "--html": { type: "boolean", default: false, description: "Output HTML file" },
           "--png": { type: "boolean", default: false, description: "Output PNG file" },
           "--pdf": { type: "boolean", default: false, description: "Output PDF file" },
+          "--json": { type: "boolean", default: false, description: "Output JSON file with normalized model and layout data" },
           "--scale": { type: "string", default: "2", description: "PNG pixel density scale" },
           "--pageSize": { type: "string", default: "A4", description: "PDF page size (A4, Letter, WxH)" },
           "--pdfMargin": { type: "string", default: "10mm", description: "PDF margins" },

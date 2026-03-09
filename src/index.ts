@@ -19,7 +19,7 @@ import {
   gapOption, paddingOption, headerHeightOption, alignmentOption, aspectRatioOption,
   rootGapOption, marginOption, leafHeightOption, minLeafWidthOption, maxLeafWidthOption,
   themeOption, fontOption, fontSizeOption, outDirOption, svgOption, noSvgOption,
-  htmlOption, confluenceOption, pngOption, pdfOption, scaleOption, pageSizeOption, pdfMarginOption,
+  htmlOption, confluenceOption, pngOption, pdfOption, jsonExportOption, scaleOption, pageSizeOption, pdfMarginOption,
   dryRunOption, quietOption, verboseOption, outputOption,
 } from "./cli/options.js";
 
@@ -165,6 +165,7 @@ addImportOptions(renderCmd)
   .addOption(confluenceOption)
   .addOption(pngOption)
   .addOption(pdfOption)
+  .addOption(jsonExportOption)
   .addOption(scaleOption)
   .addOption(pageSizeOption)
   .addOption(pdfMarginOption)
@@ -220,6 +221,7 @@ addImportOptions(renderCmd)
       pdfMargin: opts.pdfMargin as string,
       dryRun: (opts.dryRun ?? false) as boolean,
       confluence,
+      json: (opts.json ?? false) as boolean,
     };
     const { envelope, exitCode } = await runRender(
       input,

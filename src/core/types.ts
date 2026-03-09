@@ -163,6 +163,7 @@ export interface ExportOptions {
   pdfMargin: string;
   dryRun: boolean;
   confluence: boolean;
+  json: boolean;
 }
 
 export type MeasureTextFn = (text: string) => number;
@@ -212,7 +213,7 @@ export interface Envelope<T> {
 // ---------------------------------------------------------------------------
 
 export interface Artefact {
-  type: "svg" | "html" | "png" | "pdf";
+  type: "svg" | "html" | "png" | "pdf" | "json";
   path: string;
   bytes: number;
 }

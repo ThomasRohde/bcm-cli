@@ -1,6 +1,6 @@
 # bcm-cli
 
-[![version](https://img.shields.io/badge/version-1.0.10-blue)](https://github.com/ThomasRohde/bcm-cli)
+[![version](https://img.shields.io/badge/version-1.1.0-blue)](https://github.com/ThomasRohde/bcm-cli)
 
 A CLI tool for rendering **Business Capability Maps** from JSON or CSV data into SVG, HTML, PNG, and PDF.
 

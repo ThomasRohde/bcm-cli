@@ -253,6 +253,15 @@ export async function runRender(
         });
       }
 
+      if (exportOpts.json) {
+        const { buildJsonExport } = await import("../../render/json-export.js");
+        const jsonData = buildJsonExport(layoutResult, roots);
+        const jsonContent = JSON.stringify(jsonData, null, 2);
+        const jsonPath = join(exportOpts.outDir, `${baseName}.bcm.json`);
+        atomicWrite(jsonPath, jsonContent);
+        artefacts.push({ type: "json", path: jsonPath, bytes: Buffer.byteLength(jsonContent, "utf-8") });
+      }
+
       if (exportOpts.pdf) {
         const pdfPath = join(exportOpts.outDir, `${baseName}.pdf`);
         const { exportPdf } = await import("../../export/playwright-export.js");
